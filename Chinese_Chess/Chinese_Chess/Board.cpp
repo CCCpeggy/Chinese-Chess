@@ -13,6 +13,6 @@ int Board::move(Point, Point)
 	return 0;
 }
 
-void Board::repent()
+void Board::repent(Board)
 {
 }

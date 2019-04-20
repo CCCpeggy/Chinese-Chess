@@ -12,7 +12,7 @@ public:
 	void changeBoard(Board);
 	void choose(Point);
 	int move(Point, Point);
-	void repent();
+	void repent(Board);
 };
 
 #endif
