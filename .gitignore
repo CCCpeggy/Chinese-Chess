@@ -51,6 +51,7 @@ Chinese_Chess/Chinese_Chess/Debug/vc140.pdb
 *.db
 *.ilk
 *.opendb
+*.suo
 Chinese_Chess/Chinese_Chess/Debug/Chinese_Chess.log
 Chinese_Chess/Chinese_Chess/Debug/Chinese_Chess.tlog/CL.read.1.tlog
 Chinese_Chess/Chinese_Chess/Debug/Chinese_Chess.tlog/link.read.1.tlog
@@ -82,3 +83,4 @@ Chinese_Chess/Debug/Chinese_Chess.pdb
 *.tlog
 *.obj
 *.idb
+*.ipch
