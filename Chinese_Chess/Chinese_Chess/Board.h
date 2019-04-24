@@ -6,13 +6,19 @@
 using namespace std;
 class Board
 {
-private:
+
 public:
-	vector<vector<char>> board;
+	Board();
+	vector<vector<short>> board;
 	void changeBoard(Board);
-	void choose(Point);
+	void select(Point);
 	int move(Point, Point);
 	void repent(Board);
+	vector<short>& operator [](int);
+private:
+	void deselect();
+	void ifPointValidChangeBoard(Point, Point,Point leftUp,Point rightDown);
+	Point findChess(int);//only for ±N«Ó
 };
 
 #endif
