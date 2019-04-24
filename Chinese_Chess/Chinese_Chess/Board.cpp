@@ -67,16 +67,71 @@ void Board::changeBoard(Board board)
 
 void Board::select(Point p)
 {
-	vector<Point> moveOnePoint = { Point(0,1),Point(0,-1) ,Point(1,0) ,Point(-1,0) };
+	vector<Point> moveOneStep = { Point(0,1),Point(0,-1) ,Point(1,0) ,Point(-1,0) };
+	vector<Point> moveDiagonalStep = { Point(1,1),Point(1,-1) ,Point(-1,1) ,Point(-1,-1) };
 	short chessType = board[p.x][p.y];
 	deselect();//回到沒選棋的狀態
+
 	switch (chessType)
 	{
-		//將
+	//將 帥
 	case 1:
 		for (size_t i = 0; i < 4; i++)
 		{
-			ifPointValidChangeBoard(p,p+moveOnePoint[i], Point(0, 3), Point(2, 5));
+			ifPointValidChangeBoard(p,p+ moveOneStep[i], Point(0, 3), Point(2, 5));
+			if (findChess(8).y==p.y)
+			{
+				bool obstacle=false;
+				for (size_t i = (size_t)p.x+1; i < findChess(8).x; i++)
+				{
+					if (board[i][p.y]!=15)	
+					{
+						obstacle=true;
+						break;
+					}
+				}
+				if (!obstacle)
+				{
+					ifPointValidChangeBoard(p, findChess(8));
+				}
+			}
+		}
+		break;
+	//帥
+	case 8:
+		for (size_t i = 0; i < 4; i++)
+		{
+			ifPointValidChangeBoard(p, p + moveOneStep[i], Point(7, 3), Point(9, 5));
+			if (findChess(1).y == p.y)
+			{
+				bool obstacle = false;
+				for (size_t i = (size_t)p.x + 1; i < findChess(1).x; i++)
+				{
+					if (board[i][p.y] != 15)
+					{
+						obstacle = true;
+						break;
+					}
+				}
+				if (!obstacle)
+				{
+					ifPointValidChangeBoard(p, findChess(1));
+				}
+			}
+		}
+		break;
+
+	//士 仕
+	case 2:
+		for (size_t i = 0; i < 4; i++)
+		{
+			ifPointValidChangeBoard(p, p + moveDiagonalStep[i], Point(0, 3), Point(2, 5));
+		}
+		break; 
+	case 9:
+		for (size_t i = 0; i < 4; i++)
+		{
+			ifPointValidChangeBoard(p, p + moveDiagonalStep[i], Point(7, 3), Point(9, 5));
 		}
 		break;
 	default:
@@ -126,7 +181,7 @@ vector<short>& Board::operator[](int index)
 	return board[index];
 }
 
-void Board::ifPointValidChangeBoard(Point p,Point dest, Point leftUp, Point rightDown)
+void Board::ifPointValidChangeBoard(Point p,Point dest, Point leftUp=Point(0,0), Point rightDown = Point(9, 8))
 {
 	if (leftUp.x<= dest.x&& leftUp.y <= dest.y&&
 		dest.x <= rightDown.x && dest.y <= rightDown.y&&
@@ -145,10 +200,10 @@ Point Board::findChess(int chessType)
 		{
 			if (chessType==board[i][j])
 			{
-				return true;
+				return Point(i,j);
 			}
 		}
 	}
-	return false;
+	return Point(-1,-1);
 }
 
