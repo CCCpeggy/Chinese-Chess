@@ -15,10 +15,11 @@ public:
 	int move(Point, Point);
 	void repent(Board);
 	vector<short>& operator [](int);
+	short& operator [](Point&);
 private:
 	void deselect();
-	void ifPointValidChangeBoard(Point, Point,Point leftUp,Point rightDown);
-	Point findChess(int);//only for 將帥
+	void ifPointValidChangeBoard(Point, Point,Point leftUp= Point (0,0),Point rightDown = Point(9, 8));
+	Point findChess(int);//only for 將帥,找不到ret(-1,-1)
 };
 
 #endif

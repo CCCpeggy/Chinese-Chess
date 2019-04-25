@@ -17,7 +17,7 @@ int main() {
 		system("pause");
 
 		//¿ï¾Ü¬Y­Ó´Ñ¤l
-		game.board.choose(Point(0,0));
+		game.board.select(Point(0,0));
 		game.drawInterface();
 		system("pause");
 
