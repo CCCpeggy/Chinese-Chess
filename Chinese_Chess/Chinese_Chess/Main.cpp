@@ -9,6 +9,10 @@
 #define BOARD_X 20
 #define BOARD_Y 10
 #define SHOW_DIALOG(CONTENT,FUNC){ gameMode = 2;dialogIndex = 0;dialogFunc = (FUNC);dialogContent = (CONTENT);showDialog(dialogContent, 0);}
+#define GAME_MODE 1110
+#define MENU_MODE 1111
+#define DIALOG_MODE 1112
+
 #pragma endregion
 using namespace std;
 
@@ -29,7 +33,7 @@ void updateCursor(); //更新輸入點所在位置
 void setCursor(int, int); //設定輸入點所在位置
 void movePoint(int); // 0 左; 1 上; 2 右; 3 下;
 
-//遊戲的funciont
+//遊戲的function
 void initBoard(); //初始化遊戲
 void selectChess(int, int); //選擇棋子
 int moveChess(); //移動選擇的棋子 //回傳不為-1:遊戲結束
@@ -47,7 +51,7 @@ bool validMove();
 int main() {
 
 	char key;
-	int gameMode = 0; // 0 遊戲模式  1 選單模式  2 對話框模式
+	int gameMode = GAME_MODE; 
 	int menuIndex = 0; //選單選取項目
 	int dialogIndex = 0; //對話框選取項目
 	bool selectedChess = false; //是否選取了棋子
@@ -58,6 +62,7 @@ int main() {
 
 	handleInput = GetStdHandle(STD_INPUT_HANDLE);
 	handleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTitle("象棋");
 
 	DWORD consoleCnt;
 	DWORD consoleMode;
@@ -84,20 +89,20 @@ int main() {
 				case VK_RIGHT: //27
 					//上下左右移動時
 					//遊戲模式
-					if (gameMode == 0) {
+					if (gameMode == GAME_MODE) {
 						//變更游標
 						movePoint(input.Event.KeyEvent.wVirtualKeyCode - 0x25);
 						updateCursor();
 					}
 					//選單模式
-					else if (gameMode == 1) {
+					else if (gameMode == MENU_MODE) {
 						//計算選單選取項目
 						menuIndex = (++menuIndex) % 4;
 						//重新顯示選單
 						showMenu(menuIndex);
 					}
 					//對話框模式
-					else if (gameMode == 2) {
+					else if (gameMode == DIALOG_MODE) {
 						//計算對話框選取項目
 						dialogIndex = (++dialogIndex) % 2;
 						//重新顯示對話框
@@ -125,7 +130,7 @@ int main() {
 						selectedChess = !selectedChess;
 					}
 					//選單模式
-					else if (gameMode == 1) {
+					else if (gameMode == MENU_MODE) {
 						//選單選擇項目
 						switch (menuIndex) {
 						case 0:
@@ -144,10 +149,10 @@ int main() {
 							SHOW_DIALOG("確定要結束遊戲嗎", endGame);
 							break;
 						}
-						gameMode = 0;
+						gameMode = GAME_MODE;
 					}
 					//對話框模式
-					else if (gameMode == 2) {
+					else if (gameMode == DIALOG_MODE) {
 						//選擇"是"
 						if (dialogIndex == 1) dialogFunc();
 						//重新顯示畫面
@@ -156,7 +161,7 @@ int main() {
 					break;
 				case VK_ESCAPE:
 					//esc 顯示選單
-					gameMode = 1;
+					gameMode = MENU_MODE;
 					menuIndex = 0;
 					showMenu(0);
 					break;
@@ -285,11 +290,11 @@ void showInterface() {
 
 bool hasChess()
 {
-	return game->board.board[gamePoint.x][gamePoint.y] != 0;
+	return game->board[gamePoint] != 0;
 }
 
 bool validMove()
 {
-	return game->board.board[gamePoint.x][gamePoint.y] <= 0;
+	return game->board[gamePoint] <= 0;
 }
 
