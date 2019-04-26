@@ -9,7 +9,6 @@ class Board
 
 public:
 	Board();
-	vector<vector<short>> board;
 	void changeBoard(Board);
 	void select(Point);
 	int move(Point, Point);
@@ -18,6 +17,7 @@ public:
 	short& operator [](Point&);
 private:
 	void deselect();
+	vector<vector<short>> board;
 	void ifPointValidChangeBoard(Point, Point,Point leftUp= Point (0,0),Point rightDown = Point(9, 8));
 	Point findChess(int);//only for ±N«Ó,§ä¤£¨ìret(-1,-1)
 };
