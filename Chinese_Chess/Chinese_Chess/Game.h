@@ -2,8 +2,11 @@
 #define _GAME_
 
 #include "Board.h"
+#include "Piece.h"
 #include "Log.h"
 #include <string>
+#include<windows.h>
+#include <iostream>
 using namespace std;
 class Game
 {
@@ -14,6 +17,8 @@ public:
 	Game();
 	Board board;
 	Log log;
+	Piece pieces[14];
+	Piece piecegrid;
 
 	//draw console
 	void drawInterface(); //將Game的資料顯示

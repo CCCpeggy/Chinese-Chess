@@ -62,7 +62,7 @@ int main() {
 
 	handleInput = GetStdHandle(STD_INPUT_HANDLE);
 	handleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTitle("象棋");
+	//SetConsoleTitle("象棋");
 
 	DWORD consoleCnt;
 	DWORD consoleMode;
@@ -185,8 +185,11 @@ int main() {
 void updateCursor()
 {
 	COORD setPoint;
-	setPoint.X = gamePoint.x + BOARD_X;
-	setPoint.Y = gamePoint.y + BOARD_Y;
+	setPoint.X = gamePoint.x ;
+	setPoint.Y = gamePoint.y ;
+	//setPoint.X = gamePoint.x + BOARD_X;
+	//setPoint.Y = gamePoint.y + BOARD_Y;
+
 	SetConsoleCursorPosition(handleOutput, setPoint);
 }
 
@@ -203,19 +206,19 @@ void movePoint(int direction)
 	switch (direction) {
 	//left
 	case 0:
-		gamePoint.x += gamePoint.x ? -1 : 0;
+		gamePoint.x += gamePoint.x ? -2 : 0;
 		break;
 	//up
 	case 1:
-		gamePoint.y += gamePoint.y ? -1 : 0;
+		gamePoint.y += gamePoint.y ? -2 : 0;
 		break;
 	//right
 	case 2:
-		gamePoint.x += gamePoint.x < 9 ? 1 : 0;
+		gamePoint.x += gamePoint.x < 32 ? 2 : 0;
 		break;
 	//down
 	case 3:
-		gamePoint.y += gamePoint.y < 10 ? 1 : 0;
+		gamePoint.y += gamePoint.y < 18 ? 2 : 0;
 		break;
 		
 	}
@@ -225,8 +228,10 @@ void initBoard() {
 	setCursor(0, 0);
 	if (game != nullptr) delete game;
 	game = new Game();
-	Board loadBoard = file.loadFile(READ_FILE_NAME);
-	game->board.changeBoard(loadBoard);
+	//Board loadBoard = file.loadFile(READ_FILE_NAME);
+	//game->board.changeBoard(loadBoard);
+	//顯示原始board
+	Board*b = new Board();
 	game->drawInterface();
 }
 

@@ -30,6 +30,9 @@
     <ClCompile Include="Log.cpp">
       <Filter>原始程式檔</Filter>
     </ClCompile>
+    <ClCompile Include="Piece.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
@@ -45,6 +48,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="File.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Piece.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
