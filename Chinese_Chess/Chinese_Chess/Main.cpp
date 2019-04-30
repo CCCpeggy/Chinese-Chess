@@ -6,8 +6,8 @@
 #pragma region define
 #define READ_FILE_NAME "game.txt"
 #define WRITE_FILE_NAME "result.txt"
-#define BOARD_X 20
-#define BOARD_Y 10
+#define BOARD_X 0
+#define BOARD_Y 0
 #define SHOW_DIALOG(CONTENT,FUNC){ gameMode = 2;dialogIndex = 0;dialogFunc = (FUNC);dialogContent = (CONTENT);showDialog(dialogContent, 0);}
 #define GAME_MODE 1110
 #define MENU_MODE 1111
@@ -23,7 +23,8 @@ HANDLE handleInput;
 HANDLE handleOutput;
 
 //關於遊戲
-Game *game = nullptr;
+const wchar_t* projectName = L"象棋";
+Game* game = nullptr;
 File file;
 Point gamePoint; //目前輸入點所在位置
 Point selectedPoint; //選取的象棋所在位置
@@ -35,7 +36,7 @@ void movePoint(int); // 0 左; 1 上; 2 右; 3 下;
 
 //遊戲的function
 void initBoard(); //初始化遊戲
-void selectChess(int, int); //選擇棋子
+void selectChess(); //選擇棋子
 int moveChess(); //移動選擇的棋子 //回傳不為-1:遊戲結束
 void undo(); //悔棋
 void redo(); //回復
@@ -43,7 +44,7 @@ void showMenu(int); //顯示選單
 void showDialog(string, int); //顯示對話框
 void endGame(); //結束遊戲
 void showInterface(); //重新顯示遊戲畫面
-bool hasChess(); 
+bool hasChess();
 bool validMove();
 
 #pragma endregion
@@ -51,18 +52,19 @@ bool validMove();
 int main() {
 
 	char key;
-	int gameMode = GAME_MODE; 
+	int gameMode = GAME_MODE;
 	int menuIndex = 0; //選單選取項目
 	int dialogIndex = 0; //對話框選取項目
 	bool selectedChess = false; //是否選取了棋子
 	void (*dialogFunc)() = nullptr; //對話框所要做的動作
-	string dialogContent=""; //對話框顯示的文字
+	string dialogContent = ""; //對話框顯示的文字
 
-    #pragma region init
+#pragma region init
 
 	handleInput = GetStdHandle(STD_INPUT_HANDLE);
 	handleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-	//SetConsoleTitle("象棋");
+	
+	SetConsoleTitle(projectName);
 
 	DWORD consoleCnt;
 	DWORD consoleMode;
@@ -75,7 +77,7 @@ int main() {
 
 	initBoard();
 
-    #pragma region gameLoop
+#pragma region gameLoop
 	while (ReadConsoleInput(handleInput, &input, 1, &consoleCnt))
 	{
 		if (input.EventType == KEY_EVENT)
@@ -91,7 +93,7 @@ int main() {
 					//遊戲模式
 					if (gameMode == GAME_MODE) {
 						//變更游標
-						movePoint(input.Event.KeyEvent.wVirtualKeyCode - 0x25);
+						movePoint(input.Event.KeyEvent.wVirtualKeyCode - VK_LEFT);
 						updateCursor();
 					}
 					//選單模式
@@ -113,21 +115,15 @@ int main() {
 					//按Enter動作
 					//遊戲模式
 					if (gameMode == 0) {
-						//已選擇過棋子→移動選擇的棋子的位置
-						if (selectedChess) {
-							//確認位置是否能移動
-							if (validMove()) {
-								//移動位置
-								int gameStatus = moveChess();
-								if (gameStatus == 1) SHOW_DIALOG("紅色勝利，要重新開始遊戲嗎", initBoard);
-								if (gameStatus == 2) SHOW_DIALOG("黑色勝利，要重新開始遊戲嗎", initBoard);
-							}
+						if (game->board[gamePoint] <= 0) {
+							//移動位置
+							int gameStatus = moveChess();
+							if (gameStatus == 1) SHOW_DIALOG("紅色勝利，要重新開始遊戲嗎", initBoard);
+							if (gameStatus == 2) SHOW_DIALOG("黑色勝利，要重新開始遊戲嗎", initBoard);
 						}
-						//未選擇過棋子→選擇此棋子
 						else {
-							if (hasChess()) selectChess(gamePoint.x, gamePoint.y);
+							selectChess();
 						}
-						selectedChess = !selectedChess;
 					}
 					//選單模式
 					else if (gameMode == MENU_MODE) {
@@ -185,11 +181,8 @@ int main() {
 void updateCursor()
 {
 	COORD setPoint;
-	setPoint.X = gamePoint.x ;
-	setPoint.Y = gamePoint.y ;
-	//setPoint.X = gamePoint.x + BOARD_X;
-	//setPoint.Y = gamePoint.y + BOARD_Y;
-
+	setPoint.X = gamePoint.x + BOARD_X;
+	setPoint.Y = gamePoint.y + BOARD_Y;
 	SetConsoleCursorPosition(handleOutput, setPoint);
 }
 
@@ -204,23 +197,23 @@ void setCursor(int x, int y)
 void movePoint(int direction)
 {
 	switch (direction) {
-	//left
+		//left
 	case 0:
-		gamePoint.x += gamePoint.x ? -2 : 0;
+		gamePoint.x += gamePoint.x ? -4 : 0;
 		break;
-	//up
+		//up
 	case 1:
 		gamePoint.y += gamePoint.y ? -2 : 0;
 		break;
-	//right
+		//right
 	case 2:
-		gamePoint.x += gamePoint.x < 32 ? 2 : 0;
+		gamePoint.x += gamePoint.x < 32 ? 4 : 0;
 		break;
-	//down
+		//down
 	case 3:
 		gamePoint.y += gamePoint.y < 18 ? 2 : 0;
 		break;
-		
+
 	}
 }
 
@@ -228,19 +221,16 @@ void initBoard() {
 	setCursor(0, 0);
 	if (game != nullptr) delete game;
 	game = new Game();
-	//Board loadBoard = file.loadFile(READ_FILE_NAME);
-	//game->board.changeBoard(loadBoard);
-	//顯示原始board
-	Board*b = new Board();
-	game->drawInterface();
+	Board loadBoard = file.loadFile(READ_FILE_NAME);
+	game->board.changeBoard(loadBoard);
+	showInterface();
 }
 
-void selectChess(int x, int y)
+void selectChess()
 {
 	selectedPoint = gamePoint;
-	game->board.select(Point(x, y));
-	game->drawInterface();
-	setCursor(x, y);
+	game->board.select(gamePoint);
+	showInterface();
 }
 
 int moveChess()
@@ -248,7 +238,7 @@ int moveChess()
 	int status = game->board.move(selectedPoint, gamePoint);
 	if (status == -1) {
 		game->log.WriteLog(game->board, game->getPlayer());
-		game->drawInterface();
+		showInterface();
 	}
 	return status;
 }
@@ -259,7 +249,7 @@ void undo()
 		pair<Board, int> lastLog = game->log.LastBoard();
 		game->setPlayer(lastLog.second);
 		game->board.repent(lastLog.first);
-		game->drawInterface();
+		showInterface();
 	}
 }
 
@@ -269,7 +259,7 @@ void redo()
 		pair<Board, int> nextLog = game->log.NextBoard();
 		game->setPlayer(nextLog.second);
 		game->board.repent(nextLog.first);
-		game->drawInterface();
+		showInterface();
 	}
 }
 
@@ -291,6 +281,7 @@ void endGame()
 
 void showInterface() {
 	game->drawInterface();
+	setCursor(0, 0);
 }
 
 bool hasChess()
