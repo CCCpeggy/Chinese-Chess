@@ -17,7 +17,7 @@ public:
 	Game();
 	Board board;
 	Log log;
-	Piece pieces[14];
+	Piece pieces[15];
 	Piece piecegrid;
 
 	//draw console

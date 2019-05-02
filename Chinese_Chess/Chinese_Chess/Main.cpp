@@ -181,8 +181,8 @@ int main() {
 void updateCursor()
 {
 	COORD setPoint;
-	setPoint.X = (gamePoint.x) * 4 + BOARD_X;
-	setPoint.Y = (gamePoint.y) * 2 + BOARD_Y;
+	setPoint.X = (gamePoint.y) * 4 + BOARD_X;
+	setPoint.Y = (gamePoint.x) * 2 + BOARD_Y;
 	SetConsoleCursorPosition(handleOutput, setPoint);
 }
 
@@ -204,19 +204,19 @@ void movePoint(int direction)
 	switch (direction) {
 		//left
 	case 0:
-		gamePoint.x += gamePoint.x ? -1 : 0;
+		gamePoint.y += gamePoint.y ? -1 : 0;
 		break;
 		//up
 	case 1:
-		gamePoint.y += gamePoint.y ? -1 : 0;
+		gamePoint.x += gamePoint.x ? -1 : 0;
 		break;
 		//right
 	case 2:
-		gamePoint.x += gamePoint.x < 8 ? 1 : 0;
+		gamePoint.y += gamePoint.y < 8 ? 1 : 0;
 		break;
 		//down
 	case 3:
-		gamePoint.y += gamePoint.y < 9 ? 1 : 0;
+		gamePoint.x += gamePoint.x < 9 ? 1 : 0;
 		break;
 
 	}
