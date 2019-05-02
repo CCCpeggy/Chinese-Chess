@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A937BC53-1A94-45BA-84DE-770FA53FD0BB}</ProjectGuid>
     <RootNamespace>Chinese_Chess</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -124,6 +124,9 @@
     <ClInclude Include="Log.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Point.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="game.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
