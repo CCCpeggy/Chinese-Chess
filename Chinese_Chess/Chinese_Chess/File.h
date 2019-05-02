@@ -7,7 +7,7 @@ using namespace std;
 class File
 {
 public:
-	Board loadFile(string);
+	pair<Board,int> loadFile(string);
 	void writeFile(Board, string);
 };
 
