@@ -27,26 +27,26 @@ Piece::Piece() {
 			}
 			else if (i == 4) {
 				if (j == 0 || j == 8) {
-					gridline[i][j] = "ùø ";
+					gridline[i][j] = "¡ü";
 				}
 				else {
-					gridline[i][j] = "¢r ";
+					gridline[i][j] = "¡X";
 				}
 			}
 			else if (i == 5) {
 				if (j == 0 || j == 8) {
-					gridline[i][j] = "ùø ";
+					gridline[i][j] = "¡ü";
 				}
 				else {
-					gridline[i][j] = "¢s ";
+					gridline[i][j] = "¡X";
 				}
 			}
 			else {
 				if (j == 0 || j == 8) {
-					gridline[i][j] = "ùø ";
+					gridline[i][j] = "¡ü";
 				}
 				else {
-					gridline[i][j] = "¢q ";
+					gridline[i][j] = "¡Ï";
 				}
 
 			}

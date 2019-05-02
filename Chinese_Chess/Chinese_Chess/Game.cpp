@@ -58,20 +58,20 @@ void Game::drawInterface()
 		if (i != 0) {
 			for (int k = 0; k <= 8; k++) {
 				if (k == 0 || k == 8) {
-					cout << "║";
+					cout << "∥";
 				}
 				else {
-					cout << "│";
+					cout << "│ ";
 				}
 
 				if ((i == 1 && k == 4) || (i == 2 && k == 3)) {
-					cout << " ╱ ";
+					cout << "╱ ";
 				}
 				else if ((i == 1 && k == 3) || (i == 2 && k == 4)) {
-					cout << " ╲ ";
+					cout << "╲ ";
 				}
 				else {
-					cout << "   ";
+					cout << "  ";
 				}
 			}
 			cout << endl;
@@ -79,14 +79,16 @@ void Game::drawInterface()
 
 		for (int j = 0; j <= 8; j++) {
 			if (board[i][j] == 15) {
+				//_setmode(_fileno(stdout), _O_U16TEXT);
 				cout << piecegrid.gridline[i][j];
+				//_setmode(_fileno(stdout), _O_TEXT);
 			}
 			else {
 
 				cout << pieces[board[i][j]];
-				
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 			}
+			
 			if (i == 0 && j != 8) {
 				cout << "═ ";
 			}
@@ -97,7 +99,7 @@ void Game::drawInterface()
 		cout << endl;
 	}
 
-	cout << "║        楚河        漢界       ║ " << endl;
+	cout << "∥        楚河       漢界       ∥ " << endl;
 
 	for (int i = 5; i <= 9; i++) {
 		for (int j = 0; j <= 8; j++) {
@@ -119,7 +121,7 @@ void Game::drawInterface()
 			cout << endl;
 			for (int k = 0; k <= 8; k++) {
 				if (k == 0 || k == 8) {
-					cout << "║ ";
+					cout << "∥";
 				}
 				else {
 					cout << "│ ";
