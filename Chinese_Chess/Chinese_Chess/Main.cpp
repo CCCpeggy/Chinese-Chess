@@ -114,7 +114,7 @@ int main() {
 				case VK_RETURN:
 					//按Enter動作
 					//遊戲模式
-					if (gameMode == 0) {
+					if (gameMode == GAME_MODE) {
 						if (game->board[gamePoint] <= 0) {
 							//移動位置
 							int gameStatus = moveChess();
@@ -181,9 +181,14 @@ int main() {
 void updateCursor()
 {
 	COORD setPoint;
-	setPoint.X = gamePoint.x + BOARD_X;
-	setPoint.Y = gamePoint.y + BOARD_Y;
+	setPoint.X = (gamePoint.x) * 4 + BOARD_X;
+	setPoint.Y = (gamePoint.y) * 2 + BOARD_Y;
 	SetConsoleCursorPosition(handleOutput, setPoint);
+}
+
+void setCursor(Point point)
+{
+	setCursor(point.x, point.y);
 }
 
 void setCursor(int x, int y)
@@ -199,19 +204,19 @@ void movePoint(int direction)
 	switch (direction) {
 		//left
 	case 0:
-		gamePoint.x += gamePoint.x ? -4 : 0;
+		gamePoint.x += gamePoint.x ? -1 : 0;
 		break;
 		//up
 	case 1:
-		gamePoint.y += gamePoint.y ? -2 : 0;
+		gamePoint.y += gamePoint.y ? -1 : 0;
 		break;
 		//right
 	case 2:
-		gamePoint.x += gamePoint.x < 32 ? 4 : 0;
+		gamePoint.x += gamePoint.x < 8 ? 1 : 0;
 		break;
 		//down
 	case 3:
-		gamePoint.y += gamePoint.y < 18 ? 2 : 0;
+		gamePoint.y += gamePoint.y < 9 ? 1 : 0;
 		break;
 
 	}
@@ -221,7 +226,7 @@ void initBoard() {
 	setCursor(0, 0);
 	if (game != nullptr) delete game;
 	game = new Game();
-	Board loadBoard = file.loadFile(READ_FILE_NAME);
+	Board loadBoard = file.loadFile(READ_FILE_NAME).first;
 	game->board.changeBoard(loadBoard);
 	showInterface();
 }
@@ -280,8 +285,10 @@ void endGame()
 }
 
 void showInterface() {
-	game->drawInterface();
+	Point tmpPoint = gamePoint;
 	setCursor(0, 0);
+	game->drawInterface();
+	setCursor(tmpPoint);
 }
 
 bool hasChess()
