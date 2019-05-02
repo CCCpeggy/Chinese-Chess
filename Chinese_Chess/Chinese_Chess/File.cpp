@@ -1,6 +1,6 @@
 #include "File.h"
 #include<fstream>
-Board File::loadFile(string filename)
+pair<Board,int> File::loadFile(string filename)
 {
 	ifstream boardinfo;
 	boardinfo.open(filename);
@@ -16,9 +16,10 @@ Board File::loadFile(string filename)
 		}
 	}
 	boardinfo >> temp;
-	//player = temp;
+	int player;
+	player = temp;
 	boardinfo.close();
-	return board;
+	return pair<Board,int>(board,player);
 }
 
 void File::writeFile(Board, string)
