@@ -4,7 +4,7 @@ void Log::WriteLog(Board board, int player)
 {
 	move++;
 	vector<pair<Board, int> >::iterator itt;
-	for (itt = record.begin() + move - 1; itt != record.end(); itt++)
+	for (itt = record.begin() + static_cast<unsigned short>(move - 1); itt != record.end(); itt++)
 	{
 		record.erase(itt);
 	}
@@ -24,7 +24,7 @@ bool Log::isFinal()
 void Log::moveDisplay(int piece, Point original, Point change)
 {
 	vector<string>::iterator it;
-	for (it = displayText.begin() + move - 1; it != displayText.end(); it++)
+	for (it = displayText.begin() + static_cast<unsigned short>(move - 1); it != displayText.end(); it++)
 	{
 		displayText.erase(it);
 	}

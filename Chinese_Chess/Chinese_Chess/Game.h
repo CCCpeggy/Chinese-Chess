@@ -7,6 +7,7 @@
 #include <string>
 #include<windows.h>
 #include <iostream>
+#include <cmath>
 using namespace std;
 class Game
 {
@@ -17,7 +18,7 @@ public:
 	Game();
 	Board board;
 	Log log;
-	Piece pieces[15];
+	Piece pieces[16];
 	Piece piecegrid;
 
 	//draw console

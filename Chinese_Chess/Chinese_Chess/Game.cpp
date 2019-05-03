@@ -35,6 +35,7 @@ Game::Game()
 	pieces[14].pos("兵", 1, 6, 4);
 	pieces[14].pos("兵", 1, 6, 6);
 	pieces[14].pos("兵", 1, 6, 8);
+	pieces[15].pos("　", 1, 0, 0);
 }
 
 
@@ -83,9 +84,16 @@ void Game::drawInterface()
 				cout << piecegrid.gridline[i][j];
 				//_setmode(_fileno(stdout), _O_TEXT);
 			}
+			else if (board[i][j] == -15) {
+				//_setmode(_fileno(stdout), _O_U16TEXT);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),BACKGROUND_GREEN| BACKGROUND_RED | BACKGROUND_BLUE);
+				cout << piecegrid.gridline[i][j];
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+				//_setmode(_fileno(stdout), _O_TEXT);
+			}
 			else {
 
-				cout << pieces[board[i][j]];
+				cout << pieces[abs(board[i][j])];
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 			}
 			
@@ -106,8 +114,15 @@ void Game::drawInterface()
 			if (board[i][j] == 15) {
 				cout << piecegrid.gridline[i][j];
 			}
+			else if (board[i][j] == -15) {
+				//_setmode(_fileno(stdout), _O_U16TEXT);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_BLUE);
+				cout << piecegrid.gridline[i][j];
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+				//_setmode(_fileno(stdout), _O_TEXT);
+			}
 			else {
-				cout << pieces[board[i][j]];
+				cout << pieces[abs(board[i][j])];
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 			}
 			if (i == 9 && j != 8) {
