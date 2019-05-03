@@ -6,8 +6,10 @@
 #pragma region define
 #define READ_FILE_NAME "game.txt"
 #define WRITE_FILE_NAME "result.txt"
-#define BOARD_X 0
-#define BOARD_Y 0
+#define 棋盤基準點X 0
+#define 棋盤基準點Y 0
+#define 棋盤X軸加權 4
+#define 棋盤Y軸加權 2
 #define SHOW_DIALOG(CONTENT,FUNC){ gameMode = 2;dialogIndex = 0;dialogFunc = (FUNC);dialogContent = (CONTENT);showDialog(dialogContent, 0);}
 #define 遊戲模式 1110
 #define 選單模式 1111
@@ -32,6 +34,7 @@ Game* game = nullptr;
 File file;
 Point gamePoint; //目前輸入點所在位置
 Point selectedPoint; //選取的象棋所在位置
+int gameMode;
 
 //控制的function
 void updateCursor(); //更新輸入點所在位置
@@ -56,7 +59,6 @@ bool validMove();
 int main() {
 
 	char key;
-	int gameMode = 遊戲模式;
 	int menuIndex = 0; //選單選取項目
 	int dialogIndex = 0; //對話框選取項目
 	bool selectedChess = false; //是否選取了棋子
@@ -186,8 +188,8 @@ int main() {
 void updateCursor()
 {
 	COORD setPoint;
-	setPoint.X = (gamePoint.y) * 4 + BOARD_X;
-	setPoint.Y = (gamePoint.x) * 2 + BOARD_Y;
+	setPoint.X = (gamePoint.y) * 棋盤X軸加權 + 棋盤基準點X;
+	setPoint.Y = (gamePoint.x) * 棋盤Y軸加權 + 棋盤基準點Y;
 	SetConsoleCursorPosition(handleOutput, setPoint);
 }
 
@@ -228,6 +230,7 @@ void movePoint(int direction)
 }
 
 void initBoard() {
+	gameMode = 遊戲模式;
 	if (game != nullptr) delete game;
 	game = new Game();
 	Board loadBoard = file.loadFile(READ_FILE_NAME).first;
@@ -246,10 +249,8 @@ void selectChess()
 int moveChess()
 {
 	int status = game->board.move(selectedPoint, gamePoint);
-	if (status == -1) {
-		game->log.WriteLog(game->board, game->getPlayer());
-		showInterface();
-	}
+	if (status == -1) game->log.WriteLog(game->board, game->getPlayer());
+	showInterface();
 	game->changePlayer();
 	setCursor(game->getPlayer() ? 黑棋起始位置 : 紅棋起始位置);
 	return status;
