@@ -172,7 +172,7 @@ void Board::select(Point p)
 				for (size_t n = 1; n <= 9; n++)
 				{
 					ifPointValidChangeBoard(p, p + 	oneStep[i] * n);
-					if ((*this)[p + oneStep[i] * n] != 空格)
+					if ((*this)[p + oneStep[i] * n] != -空格)
 					{
 						break;
 					}
@@ -201,15 +201,21 @@ void Board::select(Point p)
 				bool meetFirst = false;
 				for (size_t n = 1; n <= 9; n++)
 				{
-					ifPointValidChangeBoard(p, p + oneStep[i] * n);
-					
-					if ((*this)[p + oneStep[i] * n] != 空格)
+					if (!meetFirst)
 					{
-						if (meetFirst)
+						ifPointValidChangeBoard(p, p + oneStep[i] * n);
+						if ((*this)[p + oneStep[i] * n] != -空格)
 						{
-							break;
+							meetFirst = true;
+								break;
 						}
-						meetFirst = true;
+					}
+					else
+					{
+						if ((*this)[p + oneStep[i] * n] != 空格)
+						{
+							ifPointValidChangeBoard(p, p + oneStep[i] * n);
+						}
 					}
 				}
 			}
@@ -225,7 +231,7 @@ void Board::select(Point p)
 			{
 				for (size_t i = 0; i < 4; i++)
 				{
-					if (i!=2)
+					if (i!=3)
 					{
 						ifPointValidChangeBoard(p, p + oneStep[i]);
 					}
@@ -237,7 +243,7 @@ void Board::select(Point p)
 			{
 				for (size_t i = 0; i < 4; i++)
 				{
-					if (i != 3)
+					if (i != 2)
 					{
 						ifPointValidChangeBoard(p, p + oneStep[i]);
 					}
@@ -314,7 +320,7 @@ void Board::ifPointValidChangeBoard(Point p,Point dest, Point leftUp, Point righ
 		(board[p.x][p.y]<=7!= board[dest.x][dest.y] <= 7|| board[dest.x][dest.y] ==空格)
 		)
 	{
-		board[p.x][p.y] *= -1;
+		board[dest.x][dest.y] *= -1;
 	}
 }
 
