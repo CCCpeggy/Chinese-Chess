@@ -9,9 +9,13 @@
 #define BOARD_X 0
 #define BOARD_Y 0
 #define SHOW_DIALOG(CONTENT,FUNC){ gameMode = 2;dialogIndex = 0;dialogFunc = (FUNC);dialogContent = (CONTENT);showDialog(dialogContent, 0);}
-#define GAME_MODE 1110
-#define MENU_MODE 1111
-#define DIALOG_MODE 1112
+#define 遊戲模式 1110
+#define 選單模式 1111
+#define 對話框模式 1112
+#define 紅方 0
+#define 黑方 1
+#define 紅棋起始位置 Point(9,4)
+#define 黑棋起始位置 Point(0,4)
 
 #pragma endregion
 using namespace std;
@@ -52,7 +56,7 @@ bool validMove();
 int main() {
 
 	char key;
-	int gameMode = GAME_MODE;
+	int gameMode = 遊戲模式;
 	int menuIndex = 0; //選單選取項目
 	int dialogIndex = 0; //對話框選取項目
 	bool selectedChess = false; //是否選取了棋子
@@ -91,20 +95,20 @@ int main() {
 				case VK_RIGHT: //27
 					//上下左右移動時
 					//遊戲模式
-					if (gameMode == GAME_MODE) {
+					if (gameMode == 遊戲模式) {
 						//變更游標
 						movePoint(input.Event.KeyEvent.wVirtualKeyCode - VK_LEFT);
 						updateCursor();
 					}
 					//選單模式
-					else if (gameMode == MENU_MODE) {
+					else if (gameMode == 選單模式) {
 						//計算選單選取項目
 						menuIndex = (++menuIndex) % 4;
 						//重新顯示選單
 						showMenu(menuIndex);
 					}
 					//對話框模式
-					else if (gameMode == DIALOG_MODE) {
+					else if (gameMode == 對話框模式) {
 						//計算對話框選取項目
 						dialogIndex = (++dialogIndex) % 2;
 						//重新顯示對話框
@@ -114,19 +118,20 @@ int main() {
 				case VK_RETURN:
 					//按Enter動作
 					//遊戲模式
-					if (gameMode == GAME_MODE) {
-						if (game->board[gamePoint] <= 0) {
+					if (gameMode == 遊戲模式) {
+						int piecePart = game->board[gamePoint] <= 7 ? 黑方 : 紅方;
+						if (game->board[gamePoint] <= 0 ) {
 							//移動位置
 							int gameStatus = moveChess();
 							if (gameStatus == 1) SHOW_DIALOG("紅色勝利，要重新開始遊戲嗎", initBoard);
 							if (gameStatus == 2) SHOW_DIALOG("黑色勝利，要重新開始遊戲嗎", initBoard);
 						}
-						else {
+						else if(piecePart == game->getPlayer()){
 							selectChess();
 						}
 					}
 					//選單模式
-					else if (gameMode == MENU_MODE) {
+					else if (gameMode == 選單模式) {
 						//選單選擇項目
 						switch (menuIndex) {
 						case 0:
@@ -145,10 +150,10 @@ int main() {
 							SHOW_DIALOG("確定要結束遊戲嗎", endGame);
 							break;
 						}
-						gameMode = GAME_MODE;
+						gameMode = 遊戲模式;
 					}
 					//對話框模式
-					else if (gameMode == DIALOG_MODE) {
+					else if (gameMode == 對話框模式) {
 						//選擇"是"
 						if (dialogIndex == 1) dialogFunc();
 						//重新顯示畫面
@@ -157,7 +162,7 @@ int main() {
 					break;
 				case VK_ESCAPE:
 					//esc 顯示選單
-					gameMode = MENU_MODE;
+					gameMode = 選單模式;
 					menuIndex = 0;
 					showMenu(0);
 					break;
@@ -223,12 +228,12 @@ void movePoint(int direction)
 }
 
 void initBoard() {
-	setCursor(0, 0);
 	if (game != nullptr) delete game;
 	game = new Game();
 	Board loadBoard = file.loadFile(READ_FILE_NAME).first;
 	game->board.changeBoard(loadBoard);
 	showInterface();
+	setCursor(game->getPlayer() ? 黑棋起始位置 : 紅棋起始位置);
 }
 
 void selectChess()
@@ -245,6 +250,8 @@ int moveChess()
 		game->log.WriteLog(game->board, game->getPlayer());
 		showInterface();
 	}
+	game->changePlayer();
+	setCursor(game->getPlayer() ? 黑棋起始位置 : 紅棋起始位置);
 	return status;
 }
 
