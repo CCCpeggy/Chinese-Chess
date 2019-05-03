@@ -10,14 +10,14 @@
 #define 棋盤基準點Y 0
 #define 棋盤X軸加權 4
 #define 棋盤Y軸加權 2
-#define SHOW_DIALOG(CONTENT,FUNC){ gameMode = 2;dialogIndex = 0;dialogFunc = (FUNC);dialogContent = (CONTENT);showDialog(dialogContent, 0);}
 #define 遊戲模式 1110
 #define 選單模式 1111
 #define 對話框模式 1112
+#define SHOW_DIALOG(CONTENT,FUNC){ gameMode = 對話框模式;dialogIndex = 0;dialogFunc = (FUNC);dialogContent = (CONTENT);showDialog(dialogContent, 0);}
 #define 紅方 0
 #define 黑方 1
-#define 紅棋起始位置 Point(9,4)
-#define 黑棋起始位置 Point(0,4)
+#define 紅棋起始位置 Point(9,0)
+#define 黑棋起始位置 Point(0,0)
 
 #pragma endregion
 using namespace std;
@@ -104,15 +104,19 @@ int main() {
 					}
 					//選單模式
 					else if (gameMode == 選單模式) {
+						if (input.Event.KeyEvent.wVirtualKeyCode == VK_UP) menuIndex--;
+						if (input.Event.KeyEvent.wVirtualKeyCode == VK_DOWN) menuIndex++;
 						//計算選單選取項目
-						menuIndex = (++menuIndex) % 4;
+						menuIndex = menuIndex % 4;
 						//重新顯示選單
 						showMenu(menuIndex);
 					}
 					//對話框模式
 					else if (gameMode == 對話框模式) {
+						if (input.Event.KeyEvent.wVirtualKeyCode == VK_LEFT) dialogIndex--;
+						if (input.Event.KeyEvent.wVirtualKeyCode == VK_RIGHT) dialogIndex++;
 						//計算對話框選取項目
-						dialogIndex = (++dialogIndex) % 2;
+						dialogIndex = dialogIndex % 2;
 						//重新顯示對話框
 						showDialog(dialogContent, dialogIndex);
 					}
@@ -252,7 +256,6 @@ int moveChess()
 	if (status == -1) game->log.WriteLog(game->board, game->getPlayer());
 	showInterface();
 	game->changePlayer();
-	setCursor(game->getPlayer() ? 黑棋起始位置 : 紅棋起始位置);
 	return status;
 }
 
