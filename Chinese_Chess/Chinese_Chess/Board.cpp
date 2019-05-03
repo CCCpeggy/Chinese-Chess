@@ -95,30 +95,6 @@ void Board::select(Point p)
 			for (size_t i = 0; i < 4; i++)
 			{
 				ifPointValidChangeBoard(p, p + oneStep[i], Point(0, 3), Point(2, 5));
-				if (findChess(將).y == p.y)
-				{
-					bool obstacle = false;
-					for (size_t i = (size_t)p.x + 1; i < findChess(將).x; i++)
-					{
-						if (board[i][p.y] != 空格)
-						{
-							obstacle = true;
-							break;
-						}
-					}
-					if (!obstacle)
-					{
-						ifPointValidChangeBoard(p, findChess(將));
-					}
-				}
-			}
-		break;
-		#pragma endregion
-	#pragma region 帥
-		case 8:
-			for (size_t i = 0; i < 4; i++)
-			{
-				ifPointValidChangeBoard(p, p + oneStep[i], Point(7, 3), Point(9, 5));
 				if (findChess(帥).y == p.y)
 				{
 					bool obstacle = false;
@@ -133,6 +109,30 @@ void Board::select(Point p)
 					if (!obstacle)
 					{
 						ifPointValidChangeBoard(p, findChess(帥));
+					}
+				}
+			}
+		break;
+		#pragma endregion
+	#pragma region 帥
+		case 8:
+			for (size_t i = 0; i < 4; i++)
+			{
+				ifPointValidChangeBoard(p, p + oneStep[i], Point(7, 3), Point(9, 5));
+				if (findChess(將).y == p.y)
+				{
+					bool obstacle = false;
+					for (size_t i = (size_t)p.x + 1; i < findChess(將).x; i++)
+					{
+						if (board[i][p.y] != 空格)
+						{
+							obstacle = true;
+							break;
+						}
+					}
+					if (!obstacle)
+					{
+						ifPointValidChangeBoard(p, findChess(將));
 					}
 				}
 			}
@@ -203,11 +203,14 @@ void Board::select(Point p)
 				{
 					if (!meetFirst)
 					{
-						ifPointValidChangeBoard(p, p + oneStep[i] * n);
-						if ((*this)[p + oneStep[i] * n] != -空格)
+						
+						if ((*this)[p + oneStep[i] * n] == 空格)
+						{
+							ifPointValidChangeBoard(p, p + oneStep[i] * n);							
+						}
+						else
 						{
 							meetFirst = true;
-								break;
 						}
 					}
 					else
@@ -215,6 +218,7 @@ void Board::select(Point p)
 						if ((*this)[p + oneStep[i] * n] != 空格)
 						{
 							ifPointValidChangeBoard(p, p + oneStep[i] * n);
+							break;
 						}
 					}
 				}
