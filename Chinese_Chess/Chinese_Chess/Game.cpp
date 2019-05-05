@@ -1,41 +1,25 @@
 ﻿#include "Game.h"
 
+Piece Game::pieces[15];
+
 Game::Game()
 {	
-	pieces[1].pos("將", 0, 0, 4);
-	pieces[2].pos("士", 0, 0, 3);
-	pieces[2].pos("士", 0, 0, 5);
-	pieces[3].pos("象", 0, 0, 2);
-	pieces[3].pos("象", 0, 0, 6);
-	pieces[4].pos("車", 0, 0, 0);
-	pieces[4].pos("車", 0, 0, 8);
-	pieces[5].pos("馬", 0, 0, 1);
-	pieces[5].pos("馬", 0, 0, 7);
-	pieces[6].pos("包", 0, 2, 1);
-	pieces[6].pos("包", 0, 2, 7);
-	pieces[7].pos("卒", 0, 3, 0);
-	pieces[7].pos("卒", 0, 3, 2);
-	pieces[7].pos("卒", 0, 3, 4);
-	pieces[7].pos("卒", 0, 3, 6);
-	pieces[7].pos("卒", 0, 3, 8);
+	pieces[1].pos("將", 0);
+	pieces[2].pos("士", 0);
+	pieces[3].pos("象", 0);
+	pieces[4].pos("車", 0);
+	pieces[5].pos("馬", 0);
+	pieces[6].pos("包", 0);
+	pieces[7].pos("卒", 0);
 
-	pieces[8].pos("帥", 1, 9, 4);
-	pieces[9].pos("仕", 1, 9, 3);
-	pieces[9].pos("仕", 1, 9, 5);
-	pieces[10].pos("相", 1, 9, 2);
-	pieces[10].pos("相", 1, 9, 6);
-	pieces[11].pos("車", 1, 9, 0);
-	pieces[11].pos("車", 1, 9, 8);
-	pieces[12].pos("傌", 1, 9, 1);
-	pieces[12].pos("傌", 1, 9, 7);
-	pieces[13].pos("炮", 1, 7, 1);
-	pieces[13].pos("炮", 1, 7, 7);
-	pieces[14].pos("兵", 1, 6, 0);
-	pieces[14].pos("兵", 1, 6, 2);
-	pieces[14].pos("兵", 1, 6, 4);
-	pieces[14].pos("兵", 1, 6, 6);
-	pieces[14].pos("兵", 1, 6, 8);
-	pieces[15].pos("　", 1, 0, 0);
+	pieces[8].pos("帥", 1);
+	pieces[9].pos("仕", 1);
+	pieces[10].pos("相", 1);
+	pieces[11].pos("車", 1);
+	pieces[12].pos("傌", 1);
+	pieces[13].pos("炮", 1);
+	pieces[14].pos("兵", 1);
+	pieces[15].pos("　", 1);
 }
 
 
@@ -54,9 +38,24 @@ ostream& operator<<(ostream& cout, const Piece& p) {
 
 void Game::drawInterface()
 {
+	for (int i = 0; i < 10; i++) {
+		
+		drawCheckerboard(i);
+		if (i == 4) {
+			cout << setw(47) << "∥        楚河       漢界       ∥ " << endl;
+		}
+
+	}
+
+}
+
+void Game::drawCheckerboard(int i)
+{
 	
-	for (int i = 0; i <= 4 ; i++) {
+	if(i<=4) {
+		
 		if (i != 0) {
+			cout << setw(12) << " ";
 			for (int k = 0; k <= 8; k++) {
 				if (k == 0 || k == 8) {
 					cout << "∥";
@@ -78,62 +77,92 @@ void Game::drawInterface()
 			cout << endl;
 		}
 
+		drawBattleSituation(i);
 		for (int j = 0; j <= 8; j++) {
 			if (board[i][j] == 15) {
-				//_setmode(_fileno(stdout), _O_U16TEXT);
 				cout << piecegrid.gridline[i][j];
-				//_setmode(_fileno(stdout), _O_TEXT);
 			}
 			else if (board[i][j] == -15) {
-				//_setmode(_fileno(stdout), _O_U16TEXT);
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),BACKGROUND_GREEN| BACKGROUND_RED | BACKGROUND_BLUE);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_BLUE);
 				cout << piecegrid.gridline[i][j];
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				//_setmode(_fileno(stdout), _O_TEXT);
-			}
-			else {
 
-				cout << pieces[abs(board[i][j])];
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 			}
-			
+			else if (board[i][j] > 0) {
+				cout << pieces[board[i][j]];
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+				if (j == 8) {
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+					cout << "　";
+				}
+
+			}
+			else if (board[i][j] < 0) {
+				cout << pieces[-board[i][j]];
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+				if (j == 8) {
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+					cout << "　";
+				}
+			}
+
+
 			if (i == 0 && j != 8) {
-				cout << "═ ";
+				cout << "＝";
 			}
 			else if (i != 0 && j != 8) {
 				cout << "—";
 			}
 		}
-		cout << endl;
 	}
 
-	cout << "∥        楚河       漢界       ∥ " << endl;
+	
 
-	for (int i = 5; i <= 9; i++) {
+	if(i>=5) {
+		drawBattleSituation(i);
 		for (int j = 0; j <= 8; j++) {
+			
 			if (board[i][j] == 15) {
 				cout << piecegrid.gridline[i][j];
 			}
 			else if (board[i][j] == -15) {
-				//_setmode(_fileno(stdout), _O_U16TEXT);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_BLUE);
 				cout << piecegrid.gridline[i][j];
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				//_setmode(_fileno(stdout), _O_TEXT);
+
 			}
-			else {
-				cout << pieces[abs(board[i][j])];
+			else if (board[i][j] > 0) {
+				cout << pieces[board[i][j]];
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+				if (j == 8) {
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+					cout << "　";
+				}
+
 			}
+			else if (board[i][j] < 0) {
+				cout << pieces[-board[i][j]];
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+				if (j == 8) {
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+					cout << "　";
+				}
+			}
+
 			if (i == 9 && j != 8) {
-				cout << "═ ";
+				cout << "＝";
 			}
 			else if (i != 9 && j != 8) {
 				cout << "—";
 			}
 		}
+		
+
 		if (i != 9) {
+
 			cout << endl;
+			cout << setw(12) << " ";
+
 			for (int k = 0; k <= 8; k++) {
 				if (k == 0 || k == 8) {
 					cout << "∥";
@@ -152,9 +181,13 @@ void Game::drawInterface()
 				}
 			}
 		}
-		cout << endl;
 	}
-	cout << endl ;
+	cout << endl;
+}
+
+void Game::drawBattleSituation(int i)
+{
+	cout << "戰績記錄" << i << "   " ;
 }
 
 void Game::drawMenu(int)

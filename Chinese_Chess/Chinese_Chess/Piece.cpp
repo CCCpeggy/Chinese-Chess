@@ -1,14 +1,15 @@
 #include "Piece.h"
 
+
 Piece::Piece() {
 	for (int i = 0; i <= 9; i++) {
 		for (int j = 0; j <= 8; j++) {
 			if (i == 0) {
 				if (j == 8) {
-					gridline[i][j] = "ùß ";
+					gridline[i][j] = "¢ª";
 				}
 				else if (j == 0) {
-					gridline[i][j] = "ùÝ ";
+					gridline[i][j] = "¢«";
 				}
 				else {
 					gridline[i][j] = "ùù ";
@@ -16,10 +17,10 @@ Piece::Piece() {
 			}
 			else if (i == 9) {
 				if (j == 8) {
-					gridline[i][j] = "ùå ";
+					gridline[i][j] = "¢¨ ";
 				}
 				else if (j == 0) {
-					gridline[i][j] = "ùã ";
+					gridline[i][j] = "¢©";
 				}
 				else {
 					gridline[i][j] = "ùù ";
@@ -52,14 +53,10 @@ Piece::Piece() {
 			}
 		}
 	}
-
-	
 }
 
 
-void Piece::pos(string s, bool p, int x, int y) {
+void Piece::pos(string s, bool p) {
 	symbol = s;
 	player = p;
-	locx = x;
-	locy = y;
 }

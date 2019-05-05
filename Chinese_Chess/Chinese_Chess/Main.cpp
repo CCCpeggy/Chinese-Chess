@@ -6,7 +6,7 @@
 #pragma region define
 #define READ_FILE_NAME "game.txt"
 #define WRITE_FILE_NAME "result.txt"
-#define 棋盤基準點X 0
+#define 棋盤基準點X 12
 #define 棋盤基準點Y 0
 #define 棋盤X軸加權 4
 #define 棋盤Y軸加權 2
@@ -297,7 +297,7 @@ void endGame()
 
 void showInterface() {
 	Point tmpPoint = gamePoint;
-	setCursor(0, 0);
+	setCursor(0, -3);
 	game->drawInterface();
 	setCursor(tmpPoint);
 }
