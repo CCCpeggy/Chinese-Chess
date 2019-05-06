@@ -6,7 +6,7 @@
 #pragma region define
 #define READ_FILE_NAME "game.txt"
 #define WRITE_FILE_NAME "result.txt"
-#define 棋盤基準點X 28
+#define 棋盤基準點X 16
 #define 棋盤基準點Y 2
 #define 棋盤X軸加權 4
 #define 棋盤Y軸加權 2
@@ -142,6 +142,11 @@ int main() {
 						switch (menuIndex) {
 						case 0:
 							//繼續遊戲
+							//顯示光標
+							CONSOLE_CURSOR_INFO lpCursor;
+							lpCursor.dwSize = 1;
+							lpCursor.bVisible = TRUE;
+							SetConsoleCursorInfo(handleOutput, &lpCursor);
 							showInterface();
 							break;
 						case 1:
@@ -281,7 +286,15 @@ void redo()
 
 void showMenu(int index)
 {
-	game->drawMenu(index);
+	Point tmpPoint = gamePoint;
+	setCursor(-1, -4);
+	game->drawMenu(index);	
+	setCursor(tmpPoint);
+	//隱藏光標
+	CONSOLE_CURSOR_INFO lpCursor;
+	lpCursor.dwSize = 1;
+	lpCursor.bVisible = FALSE;
+	SetConsoleCursorInfo(handleOutput, &lpCursor);
 }
 
 void showDialog(string content, int number)
@@ -297,7 +310,7 @@ void endGame()
 
 void showInterface() {
 	Point tmpPoint = gamePoint;
-	setCursor(-1, -7);
+	setCursor(-1, -4);
 	game->drawInterface();
 	setCursor(tmpPoint);
 }

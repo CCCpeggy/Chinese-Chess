@@ -26,7 +26,7 @@ public:
 
 	//draw console
 	void drawInterface(); //將Game的資料顯示
-	void drawCheckerboard(int);
+	void drawCheckerboard(int, int);
 	void drawBanner();
 	void drawFooter();
 	void drawStatus();

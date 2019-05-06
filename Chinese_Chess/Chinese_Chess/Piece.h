@@ -15,5 +15,6 @@ public:
 	//grid
 	string gridLabel[2];
 	string gridLine[19];
+	string menu[12];
 };
 
