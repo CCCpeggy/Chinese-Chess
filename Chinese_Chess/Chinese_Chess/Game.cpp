@@ -19,7 +19,6 @@ Game::Game()
 	pieces[12].pos("傌", 1);
 	pieces[13].pos("炮", 1);
 	pieces[14].pos("兵", 1);
-	pieces[15].pos("　", 1);
 }
 
 
