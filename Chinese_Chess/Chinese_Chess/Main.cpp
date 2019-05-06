@@ -6,8 +6,8 @@
 #pragma region define
 #define READ_FILE_NAME "game.txt"
 #define WRITE_FILE_NAME "result.txt"
-#define 棋盤基準點X 0
-#define 棋盤基準點Y 0
+#define 棋盤基準點X 16
+#define 棋盤基準點Y 2
 #define 棋盤X軸加權 4
 #define 棋盤Y軸加權 2
 #define 遊戲模式 1110
@@ -33,6 +33,7 @@ const wchar_t* projectName = L"象棋";
 Game* game = nullptr;
 File file;
 Point gamePoint; //目前輸入點所在位置
+Point tmpPoint; //暫存位置
 Point selectedPoint; //選取的象棋所在位置
 int gameMode;
 
@@ -40,6 +41,8 @@ int gameMode;
 void updateCursor(); //更新輸入點所在位置
 void setCursor(int, int); //設定輸入點所在位置
 void movePoint(int); // 0 左; 1 上; 2 右; 3 下;
+void visibleCursor(bool);
+void setInputCursor();
 
 //遊戲的function
 void initBoard(); //初始化遊戲
@@ -53,6 +56,7 @@ void endGame(); //結束遊戲
 void showInterface(); //重新顯示遊戲畫面
 bool hasChess();
 bool validMove();
+void backGameMode();
 
 #pragma endregion
 
@@ -107,6 +111,7 @@ int main() {
 						if (input.Event.KeyEvent.wVirtualKeyCode == VK_UP) menuIndex--;
 						if (input.Event.KeyEvent.wVirtualKeyCode == VK_DOWN) menuIndex++;
 						//計算選單選取項目
+						menuIndex += 4;
 						menuIndex = menuIndex % 4;
 						//重新顯示選單
 						showMenu(menuIndex);
@@ -116,6 +121,7 @@ int main() {
 						if (input.Event.KeyEvent.wVirtualKeyCode == VK_LEFT) dialogIndex--;
 						if (input.Event.KeyEvent.wVirtualKeyCode == VK_RIGHT) dialogIndex++;
 						//計算對話框選取項目
+						dialogIndex += 2;
 						dialogIndex = dialogIndex % 2;
 						//重新顯示對話框
 						showDialog(dialogContent, dialogIndex);
@@ -142,7 +148,7 @@ int main() {
 						switch (menuIndex) {
 						case 0:
 							//繼續遊戲
-							showInterface();
+							backGameMode();
 							break;
 						case 1:
 							//重新開始
@@ -150,13 +156,13 @@ int main() {
 							break;
 						case 2:
 							//回主選單
+							backGameMode();
 							break;
 						case 3:
 							//結束遊戲
 							SHOW_DIALOG("確定要結束遊戲嗎", endGame);
 							break;
 						}
-						gameMode = 遊戲模式;
 					}
 					//對話框模式
 					else if (gameMode == 對話框模式) {
@@ -168,9 +174,14 @@ int main() {
 					break;
 				case VK_ESCAPE:
 					//esc 顯示選單
-					gameMode = 選單模式;
-					menuIndex = 0;
-					showMenu(0);
+					if (gameMode == 遊戲模式) {
+						gameMode = 選單模式;
+						menuIndex = 0;
+						showMenu(0);
+					}
+					else {
+						backGameMode();
+					}
 					break;
 				default:
 					//悔棋
@@ -194,6 +205,14 @@ void updateCursor()
 	COORD setPoint;
 	setPoint.X = (gamePoint.y) * 棋盤X軸加權 + 棋盤基準點X;
 	setPoint.Y = (gamePoint.x) * 棋盤Y軸加權 + 棋盤基準點Y;
+	SetConsoleCursorPosition(handleOutput, setPoint);
+}
+
+void setInputCursor()
+{
+	COORD setPoint;
+	setPoint.X = 0;
+	setPoint.Y = 0;
 	SetConsoleCursorPosition(handleOutput, setPoint);
 }
 
@@ -233,6 +252,16 @@ void movePoint(int direction)
 	}
 }
 
+void visibleCursor(bool visible)
+{
+	setCursor(gamePoint);
+
+	CONSOLE_CURSOR_INFO lpCursor;
+	lpCursor.dwSize = 1;
+	lpCursor.bVisible = visible;
+	SetConsoleCursorInfo(handleOutput, &lpCursor);
+}
+
 void initBoard() {
 	gameMode = 遊戲模式;
 	if (game != nullptr) delete game;
@@ -240,6 +269,7 @@ void initBoard() {
 	Board loadBoard = file.loadFile(READ_FILE_NAME).first;
 	game->board.changeBoard(loadBoard);
 	showInterface();
+	visibleCursor(true);
 	setCursor(game->getPlayer() ? 黑棋起始位置 : 紅棋起始位置);
 }
 
@@ -254,8 +284,8 @@ int moveChess()
 {
 	int status = game->board.move(selectedPoint, gamePoint);
 	if (status == -1) game->log.WriteLog(game->board, game->getPlayer());
-	showInterface();
 	game->changePlayer();
+	showInterface();
 	return status;
 }
 
@@ -281,11 +311,15 @@ void redo()
 
 void showMenu(int index)
 {
-	game->drawMenu(index);
+	visibleCursor(false);
+	setInputCursor();
+	game->drawMenu(index);	
 }
 
 void showDialog(string content, int number)
 {
+	visibleCursor(false);
+	setInputCursor();
 	game->drawDialog(content, number);
 }
 
@@ -296,10 +330,9 @@ void endGame()
 }
 
 void showInterface() {
-	Point tmpPoint = gamePoint;
-	setCursor(0, 0);
+	setInputCursor();
 	game->drawInterface();
-	setCursor(tmpPoint);
+	setCursor(gamePoint);
 }
 
 bool hasChess()
@@ -310,5 +343,12 @@ bool hasChess()
 bool validMove()
 {
 	return game->board[gamePoint] <= 0;
+}
+
+void backGameMode()
+{
+	showInterface();
+	visibleCursor(true);
+	gameMode = 遊戲模式;
 }
 

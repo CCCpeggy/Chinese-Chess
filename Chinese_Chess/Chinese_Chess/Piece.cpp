@@ -1,65 +1,42 @@
 #include "Piece.h"
 
+
 Piece::Piece() {
-	for (int i = 0; i <= 9; i++) {
-		for (int j = 0; j <= 8; j++) {
-			if (i == 0) {
-				if (j == 8) {
-					gridline[i][j] = "ùß ";
-				}
-				else if (j == 0) {
-					gridline[i][j] = "ùÝ ";
-				}
-				else {
-					gridline[i][j] = "ùù ";
-				}
-			}
-			else if (i == 9) {
-				if (j == 8) {
-					gridline[i][j] = "ùå ";
-				}
-				else if (j == 0) {
-					gridline[i][j] = "ùã ";
-				}
-				else {
-					gridline[i][j] = "ùù ";
-				}
-			}
-			else if (i == 4) {
-				if (j == 0 || j == 8) {
-					gridline[i][j] = "¡ü";
-				}
-				else {
-					gridline[i][j] = "¡X";
-				}
-			}
-			else if (i == 5) {
-				if (j == 0 || j == 8) {
-					gridline[i][j] = "¡ü";
-				}
-				else {
-					gridline[i][j] = "¡X";
-				}
-			}
-			else {
-				if (j == 0 || j == 8) {
-					gridline[i][j] = "¡ü";
-				}
-				else {
-					gridline[i][j] = "¡Ï";
-				}
 
-			}
-		}
-	}
-
-	
+	gridLabel[0] = "¢°¡@¢±¡@¢²¡@¢³¡@¢´¡@¢µ¡@¢¶¡@¢·¡@¢¸";
+	gridLabel[1] = "¤E¡@¤K¡@¤C¡@¤»¡@¤­¡@¥|¡@¤T¡@¤G¡@¤@";
+	gridLine[0] = "¡D¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡D";
+	gridLine[1] = "¡ü¡@¡U¡@¡U¡@¡U¢@¡U¡þ¡U¡@¡U¡@¡U¡@¡ü";
+	gridLine[2] = "¡ü¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡ü";
+	gridLine[3] = "¡ü¡@¡U¡@¡U¡@¡U¡þ¡U¢@¡U¡@¡U¡@¡U¡@¡ü";
+	gridLine[4] = "¡ü¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡ü";
+	gridLine[5] = "¡ü¡@¡U¡@¡U¡@¡U¡@¡U¡@¡U¡@¡U¡@¡U¡@¡ü";
+	gridLine[6] = "¡ü¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡ü";
+	gridLine[7] = "¡ü¡@¡U¡@¡U¡@¡U¡@¡U¡@¡U¡@¡U¡@¡U¡@¡ü";
+	gridLine[8] = "¡ü¡X¡X¡X¡X¡X¡X¡X¡X¡X¡X¡X¡X¡X¡X¡X¡ü";
+	gridLine[9] = "¡ü¡@¡@¡@·¡ªe¡@¡@¡@¡@¡@º~¬É¡@¡@¡@¡ü";
+	gridLine[10] = "¡ü¡X¡X¡X¡X¡X¡X¡X¡X¡X¡X¡X¡X¡X¡X¡X¡ü";
+	gridLine[11] = "¡ü¡@¡U¡@¡U¡@¡U¡@¡U¡@¡U¡@¡U¡@¡U¡@¡ü";
+	gridLine[12] = "¡ü¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡ü";
+	gridLine[13] = "¡ü¡@¡U¡@¡U¡@¡U¡@¡U¡@¡U¡@¡U¡@¡U¡@¡ü";
+	gridLine[14] = "¡ü¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡ü";
+	gridLine[15] = "¡ü¡@¡U¡@¡U¡@¡U¢@¡U¡þ¡U¡@¡U¡@¡U¡@¡ü";
+	gridLine[16] = "¡ü¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡Ï¡X¡ü";
+	gridLine[17] = "¡ü¡@¡U¡@¡U¡@¡U¡þ¡U¢@¡U¡@¡U¡@¡U¡@¡ü";
+	gridLine[18] = "¡D¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡D";
+	menu[0] = "ùÝùù ùù ùù ùù ùù ùùùß ";
+	menu[1] = "ùø  Ä~Äò¹CÀ¸ ùø ";
+	menu[2] = "ùàùù ùù ùù ùù ùù ùùùâ ";
+	menu[3] = "ùø  ­«·s¶}©l ùø ";
+	menu[4] = "ùàùù ùù ùù ùù ùù ùùùâ ";
+	menu[5] = "ùø  ÀH«K¥´¥´ ùø ";
+	menu[6] = "ùàùù ùù ùù ùù ùù ùùùâ ";
+	menu[7] = "ùø  Â÷¶}¹CÀ¸ ùø ";
+	menu[8] = "ùãùù ùù ùù ùù ùù ùùùå ";
 }
 
 
-void Piece::pos(string s, bool p, int x, int y) {
+void Piece::pos(string s, bool p) {
 	symbol = s;
 	player = p;
-	locx = x;
-	locy = y;
 }
