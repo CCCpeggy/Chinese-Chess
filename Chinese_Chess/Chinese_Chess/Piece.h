@@ -13,6 +13,7 @@ public:
 	void pos(string s, bool p); //set the status
 
 	//grid
-	string gridline[10][9];
+	string gridLabel[2];
+	string gridLine[19];
 };
 

@@ -2,57 +2,28 @@
 
 
 Piece::Piece() {
-	for (int i = 0; i <= 9; i++) {
-		for (int j = 0; j <= 8; j++) {
-			if (i == 0) {
-				if (j == 8) {
-					gridline[i][j] = "◥";
-				}
-				else if (j == 0) {
-					gridline[i][j] = "◤";
-				}
-				else {
-					gridline[i][j] = "═ ";
-				}
-			}
-			else if (i == 9) {
-				if (j == 8) {
-					gridline[i][j] = "◢ ";
-				}
-				else if (j == 0) {
-					gridline[i][j] = "◣";
-				}
-				else {
-					gridline[i][j] = "═ ";
-				}
-			}
-			else if (i == 4) {
-				if (j == 0 || j == 8) {
-					gridline[i][j] = "∥";
-				}
-				else {
-					gridline[i][j] = "—";
-				}
-			}
-			else if (i == 5) {
-				if (j == 0 || j == 8) {
-					gridline[i][j] = "∥";
-				}
-				else {
-					gridline[i][j] = "—";
-				}
-			}
-			else {
-				if (j == 0 || j == 8) {
-					gridline[i][j] = "∥";
-				}
-				else {
-					gridline[i][j] = "＋";
-				}
 
-			}
-		}
-	}
+	gridLabel[0] = "１　２　３　４　５　６　７　８　９";
+	gridLabel[1] = "九　八　七　六　五　四　三　二　一";
+	gridLine[0] = "．＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝．";
+	gridLine[1] = "∥　｜　｜　｜＼｜／｜　｜　｜　∥";
+	gridLine[2] = "∥—＋—＋—＋—＋—＋—＋—＋—∥";
+	gridLine[3] = "∥　｜　｜　｜／｜＼｜　｜　｜　∥";
+	gridLine[4] = "∥—＋—＋—＋—＋—＋—＋—＋—∥";
+	gridLine[5] = "∥　｜　｜　｜　｜　｜　｜　｜　∥";
+	gridLine[6] = "∥—＋—＋—＋—＋—＋—＋—＋—∥";
+	gridLine[7] = "∥　｜　｜　｜　｜　｜　｜　｜　∥";
+	gridLine[8] = "∥———————————————∥";
+	gridLine[9] = "∥　　　楚河　　　　　漢界　　　∥";
+	gridLine[10] = "∥———————————————∥";
+	gridLine[11] = "∥　｜　｜　｜　｜　｜　｜　｜　∥";
+	gridLine[12] = "∥—＋—＋—＋—＋—＋—＋—＋—∥";
+	gridLine[13] = "∥　｜　｜　｜　｜　｜　｜　｜　∥";
+	gridLine[14] = "∥—＋—＋—＋—＋—＋—＋—＋—∥";
+	gridLine[15] = "∥　｜　｜　｜＼｜／｜　｜　｜　∥";
+	gridLine[16] = "∥—＋—＋—＋—＋—＋—＋—＋—∥";
+	gridLine[17] = "∥　｜　｜　｜／｜＼｜　｜　｜　∥";
+	gridLine[18] = "．＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝．";
 }
 
 
