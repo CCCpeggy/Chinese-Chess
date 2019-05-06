@@ -125,3 +125,8 @@ pair<Board, int> Log::NextBoard()
 	move++;
 	return record[move];
 }
+
+vector<string> Log::getMove()
+{
+	return displayText;
+}

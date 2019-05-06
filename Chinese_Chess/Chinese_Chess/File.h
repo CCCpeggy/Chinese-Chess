@@ -8,7 +8,7 @@ class File
 {
 public:
 	pair<Board,int> loadFile(string);
-	void writeFile(Board, string);
+	void writeFile(Board x,int player);
 };
 
 #endif

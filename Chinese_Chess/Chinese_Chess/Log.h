@@ -19,6 +19,7 @@ public:
 	bool isFirst();//判斷有沒有前一筆
 	bool isFinal();
 	void moveDisplay(int piece, Point original, Point change);//戰況顯示
+	vector<string> getMove();
 	pair<Board, int> LastBoard();
 	pair<Board, int> NextBoard();
 };

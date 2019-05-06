@@ -82,7 +82,7 @@ int main() {
 #pragma endregion
 
 	initBoard();
-
+	file.writeFile(game->board, game->getPlayer());
 #pragma region gameLoop
 	while (ReadConsoleInput(handleInput, &input, 1, &consoleCnt))
 	{
@@ -291,7 +291,7 @@ void showDialog(string content, int number)
 
 void endGame()
 {
-	file.writeFile(game->board, WRITE_FILE_NAME);
+	file.writeFile(game->board, game->getPlayer());
 	ExitProcess(0);
 }
 

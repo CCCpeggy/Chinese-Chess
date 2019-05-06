@@ -22,7 +22,28 @@ pair<Board,int> File::loadFile(string filename)
 	return pair<Board,int>(board,player);
 }
 
-void File::writeFile(Board, string)
+void File::writeFile(Board x,int player)
 {
-	//§âboard¼g¥X¥h
+	ofstream boardOutput("outputBoard.txt");
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			if (x[Point(i, j)]<0&& x[Point(i, j)]!=-15)
+			{
+				boardOutput << (-1)*x[Point(i, j)] << " ";
+			}
+			else if (x[Point(i, j)] == 15|| x[Point(i, j)]==-15)
+			{
+				boardOutput << 0 << " ";
+			}
+			else
+			{
+				boardOutput <<x[Point(i, j)] << " ";
+			}
+		}
+		boardOutput << endl;
+	}
+	boardOutput << player << endl;
+	boardOutput.close();
 }
