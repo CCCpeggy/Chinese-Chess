@@ -102,7 +102,11 @@ void Game::drawCheckerboard(int i, int mode) {//mode:0->一般, 1->目錄, 2->�
 
 void Game::drawBattleSituation(int i)
 {
-	cout << "第 " << i <<"筆戰績記錄"<< "　" ;
+	vector<string> logs = log.getMove();
+	if (i < logs.size())
+		cout << logs[i] << "　";
+	else
+		cout << "第 " << i << "筆戰績記錄" << "　";
 }
 
 void Game::drawBanner()

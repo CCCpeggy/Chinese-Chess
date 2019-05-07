@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <utility>
 #include <Windows.h>
+#include <cmath>
 #pragma region define
 #define READ_FILE_NAME "game.txt"
 #define WRITE_FILE_NAME "result.txt"
@@ -267,6 +268,7 @@ void initBoard() {
 	if (game != nullptr) delete game;
 	game = new Game();
 	Board loadBoard = file.loadFile(READ_FILE_NAME).first;
+	game->setPlayer(file.loadFile(READ_FILE_NAME).second);
 	game->board.changeBoard(loadBoard);
 	showInterface();
 	visibleCursor(true);
@@ -284,6 +286,7 @@ int moveChess()
 {
 	int status = game->board.move(selectedPoint, gamePoint);
 	if (status == -1) game->log.WriteLog(game->board, game->getPlayer());
+	game->log.moveDisplay(std::abs(game->board[gamePoint]), selectedPoint, gamePoint);
 	game->changePlayer();
 	showInterface();
 	return status;

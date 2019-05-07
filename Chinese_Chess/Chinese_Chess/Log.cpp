@@ -29,90 +29,91 @@ void Log::moveDisplay(int piece, Point original, Point change)
 		displayText.erase(it);
 	}
 	string status;
-	string temp = to_string(move);
-	for (int i = temp.length(); i <= 4; i++)
+	int tmpMove = move;
+
+	for (int i = 0; i < 1; i++, tmpMove /= 10)
 	{
-		status += " ";
+		status = roadBlack[tmpMove % 10] + status;
 	}
-	status += temp;
-	status += " ";
-	if (piece<8) { status += "¶Â : "; }
-	else { status += "¬õ : "; }
+
+	if (piece < 8) { status += "¶Â¡G"; }
+	else { status += "¬õ¡G"; }
 	status += pieceName[piece];
 	if (piece == 1 || piece == 4 || piece == 6 || piece == 7)
 	{
-		if (original.y == change.y)
+		if (original.x == change.x)
 		{
-			status += roadBlack[original.x];
+			status += roadBlack[original.y + 1];
 			status += action[0];
-			status += roadBlack[change.x];
+			status += roadBlack[change.y + 1];
 		}
-		else if (original.y < change.y)
+		else if (original.x < change.x)
 		{
-			status += roadBlack[original.x];
+			status += roadBlack[original.y + 1];
 			status += action[1];
-			status += roadBlack[change.y - original.y - 1];
+			status += roadBlack[change.x - original.x];
 		}
-		else if (original.y > change.y)
+		else if (original.x > change.x)
 		{
-			status += roadBlack[original.x];
+			status += roadBlack[original.y + 1];
 			status += action[2];
-			status += roadBlack[original.y - change.y - 1];
+			status += roadBlack[original.x - change.x];
 		}
 	}
 	if (piece == 2 || piece == 3 || piece == 5)
 	{
-		if (original.y < change.y)
+		if (original.x < change.x)
 		{
-			status += roadBlack[original.x];
+			status += roadBlack[original.y + 1];
 			status += action[1];
-			status += roadBlack[change.x];
+			status += roadBlack[change.y + 1];
 		}
-		else if (original.y > change.y)
+		else if (original.x > change.x)
 		{
-			status += roadBlack[original.x];
+			status += roadBlack[original.y + 1];
 			status += action[2];
-			status += roadBlack[change.x];
+			status += roadBlack[change.y + 1];
 		}
 	}
 	if (piece == 8 || piece == 11 || piece == 13 || piece == 14)
 	{
-		if (original.y == change.y)
+		if (original.x == change.x)
 		{
-			status += roadRed[original.x];
+			status += roadRed[original.y];
 			status += action[0];
-			status += roadRed[change.x];
+			status += roadRed[change.y];
 		}
-		else if (original.y > change.y)
+		else if (original.x > change.x)
 		{
-			status += roadRed[original.x];
+			status += roadRed[original.y];
 			status += action[1];
-			status += roadRed[(-1)*(change.y - original.y) + 1];
+			status += roadRed[8-((-1)*(change.x - original.x) )+1];
 		}
-		else if (original.y < change.y)
+		else if (original.x < change.x)
 		{
-			status += roadRed[original.x];
+			status += roadRed[original.y];
 			status += action[2];
-			status += roadRed[(-1)*(original.y - change.y) + 1];
+			status += roadRed[8-((-1)*(original.x - change.x))+1 ];
 		}
 	}
 	if (piece == 9 || piece == 10 || piece == 12)
 	{
-		if (original.y < change.y)
+		if (original.x < change.x)
 		{
-			status += roadRed[original.x];
+			status += roadRed[original.y];
 			status += action[2];
-			status += roadRed[change.x];
+			status += roadRed[change.y];
 		}
-		else if (original.y > change.y)
+		else if (original.x > change.x)
 		{
-			status += roadRed[original.x];
+			status += roadRed[original.y];
 			status += action[1];
-			status += roadRed[change.x];
+			status += roadRed[change.y];
 		}
 	}
 	displayText.push_back(status);
 }
+
 
 pair<Board, int> Log::LastBoard()
 {
