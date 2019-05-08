@@ -99,7 +99,6 @@ void Game::drawCheckerboard(int i, int mode) {//mode:0->一般, 1->目錄, 2->�
 
 }
 
-
 void Game::drawBattleSituation(int i)
 {
 	vector<string> logs = log.getMove();
@@ -173,7 +172,6 @@ void Game::drawMenu(int index)
 				SetConsoleTextAttribute(handleSTDOutput, BACKGROUND_INTENSITY | BACKGROUND_BLUE);
 			}
 			else {
-				
 				for (int j = 4; j < 12; j++) {
 					cout << piecegrid.menu[(i - 3) * 2 + 1][j];
 				}
@@ -200,7 +198,30 @@ void Game::drawMenu(int index)
 
 void Game::drawDialog(string, int)
 {
-
+	drawBanner();
+	for (int i = 0; i < 10; i++) {
+		if (i == 4 || i == 6) {
+			drawCheckerboard(i, 2);
+			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+			cout << piecegrid.menu[(i - 4) * 2];
+			SetConsoleTextAttribute(handleSTDOutput, originalColor);
+			cout << endl << setw(16) << "　";
+			for (int j = 0; j < 20; j++) {
+				cout << piecegrid.gridLine[2 * i + 1][j];
+			}
+			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+			cout << piecegrid.menu[(i - 4) * 2 + 2] << endl;
+			SetConsoleTextAttribute(handleSTDOutput, originalColor);
+		}
+		else if(i==5){
+		
+		}
+		else {
+			drawCheckerboard(i, 0);
+		}
+	
+	}
+	drawFooter();
 }
 
 void Game::setPlayer(int newPlayer)
