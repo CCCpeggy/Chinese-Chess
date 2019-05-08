@@ -7,14 +7,14 @@
 #pragma region define
 #define READ_FILE_NAME "game.txt"
 #define WRITE_FILE_NAME "result.txt"
-#define 棋盤基準點X 16
+#define 棋盤基準點X 24
 #define 棋盤基準點Y 2
 #define 棋盤X軸加權 4
 #define 棋盤Y軸加權 2
 #define 遊戲模式 1110
 #define 選單模式 1111
 #define 對話框模式 1112
-#define SHOW_DIALOG(CONTENT,FUNC){ gameMode = 對話框模式;dialogIndex = 0;dialogFunc = (FUNC);dialogContent = (CONTENT);showDialog(dialogContent, 0);}
+#define SHOW_DIALOG(CONTENT,FUNC){ gameMode = 對話框模式;dialogIndex = 1;dialogFunc = (FUNC);dialogContent = (CONTENT);showDialog(dialogContent, 1);}
 #define 紅方 0
 #define 黑方 1
 #define 紅棋起始位置 Point(9,0)
@@ -168,7 +168,10 @@ int main() {
 					//對話框模式
 					else if (gameMode == 對話框模式) {
 						//選擇"是"
-						if (dialogIndex == 1) dialogFunc();
+						if (dialogIndex == 0) dialogFunc();
+						else {
+							backGameMode();
+						}
 						//重新顯示畫面
 						showInterface();
 					}

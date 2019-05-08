@@ -45,7 +45,7 @@ void Game::drawInterface()
 
 }
 
-void Game::drawCheckerboard(int i, int mode) {//mode:0->一般, 1->目錄, 2->對話確認框
+void Game::drawCheckerboard(int i, int mode) {//mode:0->一般, 1->目錄, 2, 3->對話確認框
 	int range;
 	if (mode == 0) {
 		range = 8;
@@ -54,11 +54,15 @@ void Game::drawCheckerboard(int i, int mode) {//mode:0->一般, 1->目錄, 2->�
 		range = 4;
 	}
 	else if (mode == 2) {
-		range = 3;
+		range = 2;
+	}
+	else if (mode == 3) {
+		range = 8;
 	}
 
-
+	cout << "｜　";
 	drawBattleSituation(i);
+	cout << "｜　";
 	for (int j = 0; j <= range; j++) {
 		if (board[i][j] > 0) {
 			if (board[i][j] == 15) {
@@ -88,13 +92,17 @@ void Game::drawCheckerboard(int i, int mode) {//mode:0->一般, 1->目錄, 2->�
 
 	}
 
-	if (i == 1 && mode == 0) {
+	if (i == 1) {
 		drawStatus();
 	}
-
-
+	else if (i == 7) {
+		cout << setw(22) << "←　→　方向鍵控制光標";
+	}
 	if (mode == 0 && i != 9) {
-		cout << endl << setw(50) << piecegrid.gridLine[2 * i + 1] << endl;
+		if (i == 4 || i == 5) {
+			cout << "　　　　　　　　　　　　";
+		}
+		cout << endl << setw(82) << piecegrid.gridLine[2 * i + 1] << endl;
 	}
 
 }
@@ -110,29 +118,31 @@ void Game::drawBattleSituation(int i)
 
 void Game::drawBanner()
 {
+	cout << "．——　戰況表　——．";
 	SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED | FOREGROUND_BLUE);
-	cout << endl << setw(11) <<"戰況顯示" << setw(39) << piecegrid.gridLabel[0] << endl;
+	cout << setw(36) << piecegrid.gridLabel[0] << endl << endl;
 	SetConsoleTextAttribute(handleSTDOutput, originalColor);
 }
 
 void Game::drawFooter()
 {
+	cout << endl << endl << "．—————————．";
 	SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED | FOREGROUND_BLUE);
-	cout << endl << setw(50) << piecegrid.gridLabel[1] << endl;
+	cout << setw(36) << piecegrid.gridLabel[1] << endl;
 	SetConsoleTextAttribute(handleSTDOutput, originalColor);
 }
 
 void Game::drawStatus()
 {
 	if (player == 0) {
-		cout << setw(10) << "現在輪到";
+		cout << setw(14) << "現在輪到";
 		SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
 		cout << "紅方";
 		SetConsoleTextAttribute(handleSTDOutput, originalColor);
 		cout << "下棋";
 	}
 	else if (player == 1) {
-		cout << setw(10) << "現在輪到";
+		cout << setw(14) << "現在輪到";
 		SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_INTENSITY);
 		cout << "黑方";
 		SetConsoleTextAttribute(handleSTDOutput, originalColor);
@@ -147,7 +157,7 @@ void Game::drawMenu(int index)
 
 		if (i == 2) {
 			drawCheckerboard(i, 1);
-			cout << endl << setw(16) << "　";
+			cout << endl << setw(24) << "　";
 			for (int j = 0; j < 20; j++) {
 				cout << piecegrid.gridLine[2 * i + 1][j];
 			}
@@ -180,7 +190,7 @@ void Game::drawMenu(int index)
 				cout << piecegrid.menu[(i - 3) * 2 + 1][j];
 			}
 			SetConsoleTextAttribute(handleSTDOutput, originalColor);
-			cout << endl << setw(16) << "　";
+			cout << endl << setw(24) << "　";
 			for (int j = 0; j < 20; j++) {
 				cout <<  piecegrid.gridLine[2 * i + 1][j];
 			}
@@ -196,25 +206,63 @@ void Game::drawMenu(int index)
 	drawFooter();
 }
 
-void Game::drawDialog(string, int)
+void Game::drawDialog(string output, int index)
 {
 	drawBanner();
 	for (int i = 0; i < 10; i++) {
-		if (i == 4 || i == 6) {
-			drawCheckerboard(i, 2);
-			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
-			cout << piecegrid.menu[(i - 4) * 2];
-			SetConsoleTextAttribute(handleSTDOutput, originalColor);
-			cout << endl << setw(16) << "　";
-			for (int j = 0; j < 20; j++) {
+
+		if (i == 3) {
+			drawCheckerboard(i, 3);
+			cout << endl << setw(24) << "　";
+			for (int j = 0; j < 12; j++) {
 				cout << piecegrid.gridLine[2 * i + 1][j];
 			}
 			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
-			cout << piecegrid.menu[(i - 4) * 2 + 2] << endl;
+			cout << piecegrid.dialog[0];
+			SetConsoleTextAttribute(handleSTDOutput, originalColor);
+			cout << endl;
+		}
+		else if (i == 4) {
+			drawCheckerboard(i, 2);
+			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+			cout << "║ ";
+			int front = (30 - output.length()) / 2 + 1;
+			SetConsoleTextAttribute(handleSTDOutput, originalColor);
+			cout << setw(front + output.length() - 1) << output;
+			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+			cout << setw(front + 1) << "║ ";
+			SetConsoleTextAttribute(handleSTDOutput, originalColor);
+			cout << endl << setw(24) << "　";
+			for (int j = 0; j < 12; j++) {
+				cout << piecegrid.gridLine[2 * i + 1][j];
+			}
+			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+			cout << piecegrid.dialog[(i - 4) + 1] << endl;
 			SetConsoleTextAttribute(handleSTDOutput, originalColor);
 		}
-		else if(i==5){
-		
+		else if(i == 5){
+			drawCheckerboard(i, 2);
+			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+			int pos;
+			index == 0 ? pos = 12 : pos = 22;			
+			int j = 0;
+			for (; j < pos; j++) {
+				cout << piecegrid.dialog[(i - 4) + 1][j];
+			}
+			SetConsoleTextAttribute(handleSTDOutput, BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
+			cout << piecegrid.dialog[(i - 4) + 1][pos] << piecegrid.dialog[(i - 4) + 1][pos + 1];
+			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+			for (j = pos + 2; j < 36; j++) {
+				cout << piecegrid.dialog[(i - 4) + 1][j];
+			}
+			SetConsoleTextAttribute(handleSTDOutput, originalColor);
+			cout << endl << setw(24) << "　";
+			for (int j = 0; j < 12; j++) {
+				cout << piecegrid.gridLine[2 * i + 1][j];
+			}
+			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+			cout << piecegrid.dialog[(i - 4) + 2] << endl;
+			SetConsoleTextAttribute(handleSTDOutput, originalColor);
 		}
 		else {
 			drawCheckerboard(i, 0);
