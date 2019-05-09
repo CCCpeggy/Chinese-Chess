@@ -22,6 +22,7 @@ public:
 	vector<string> getMove();
 	pair<Board, int> LastBoard();
 	pair<Board, int> NextBoard();
+	vector<pair<Board, int> > getRecord();
 };
 
 #endif
