@@ -15,8 +15,8 @@
 #define 選單模式 1111
 #define 對話框模式 1112
 #define SHOW_DIALOG(CONTENT,FUNC){ gameMode = 對話框模式;dialogIndex = 1;dialogFunc = (FUNC);dialogContent = (CONTENT);showDialog(dialogContent, 1);}
-#define 紅方 0
-#define 黑方 1
+#define 紅方 1
+#define 黑方 0
 #define 紅棋起始位置 Point(9,0)
 #define 黑棋起始位置 Point(0,0)
 
@@ -88,7 +88,6 @@ int main() {
 #pragma endregion
 
 	initBoard();
-	file.writeFile(game->board, game->getPlayer());
 #pragma region gameLoop
 	while (ReadConsoleInput(handleInput, &input, 1, &consoleCnt))
 	{
@@ -203,11 +202,22 @@ int main() {
 							SHOW_DIALOG("確定要還原嗎", redo);
 						}
 					}
-					else if (input.Event.KeyEvent.uChar.AsciiChar == ')') {
+					//亂數移動位置
+					else if (input.Event.KeyEvent.uChar.AsciiChar == 'R') {
 						pair<Point,Point> randomMovePoint = game->board.randMove(game->getPlayer());
 						selectedPoint = randomMovePoint.first;
 						gamePoint = randomMovePoint.second;
-						moveChess();
+						int gameStatus = moveChess();
+						if (gameStatus == 1) SHOW_DIALOG("紅色勝利，要重新開始遊戲嗎", initBoard);
+						if (gameStatus == 0) SHOW_DIALOG("黑色勝利，要重新開始遊戲嗎", initBoard);
+					}
+					//存檔
+					else if (input.Event.KeyEvent.uChar.AsciiChar == 'S') {
+						file.writeFile(game->board, game->getPlayer());
+					}
+					//存檔
+					else if (input.Event.KeyEvent.uChar.AsciiChar == 'A') {
+						file.writeAll(game->log.getRecord());
 					}
 				}
 			}
@@ -288,7 +298,7 @@ void initBoard() {
 	game->board.changeBoard(loadBoard);
 	showInterface();
 	visibleCursor(true);
-	setCursor(game->getPlayer() ? 黑棋起始位置 : 紅棋起始位置);
+	setCursor(game->getPlayer() == 紅方 ? 紅棋起始位置 : 黑棋起始位置);
 }
 
 void selectChess()
@@ -301,7 +311,7 @@ void selectChess()
 int moveChess()
 {
 	int status = game->board.move(selectedPoint, gamePoint);
-	if (status == -1) game->log.WriteLog(game->board, game->getPlayer());
+	game->log.WriteLog(game->board, game->getPlayer());
 	game->log.moveDisplay(std::abs(game->board[gamePoint]), selectedPoint, gamePoint);
 	game->changePlayer();
 	showInterface();
