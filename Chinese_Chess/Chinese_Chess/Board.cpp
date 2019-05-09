@@ -181,7 +181,12 @@ void Board::select(Point p)
 				for (size_t n = 1; n <= 9; n++)
 				{
 					ifPointValidChangeBoard(p, p + 	oneStep[i] * n);
-					if ((*this)[p + oneStep[i] * n] != -空格)
+					Point pt = p + oneStep[i]*n;
+					if (!checkPointInBoard(pt))
+					{
+						continue;
+					}
+					if ((*this)[pt] != -空格)
 					{
 						break;
 					}
@@ -397,7 +402,7 @@ void Board::ifPointValidChangeBoard(Point p,Point dest, Point leftUp, Point righ
 {
 	if (leftUp.x<= dest.x&& leftUp.y <= dest.y&&
 		dest.x <= rightDown.x && dest.y <= rightDown.y&&
-		(board[p.x][p.y]<=7!= board[dest.x][dest.y] <= 7|| board[dest.x][dest.y] ==空格)
+		(player(*this,p)!= player(*this, dest))
 		)
 	{
 		board[dest.x][dest.y] *= -1;
@@ -419,3 +424,18 @@ Point Board::findChess(int chessType)
 	return Point(-1,-1);
 }
 
+int player(Board& b, Point p)
+{
+	if (0<=abs(b[p])&&abs(b[p])<=7)
+	{
+		return 0;
+	}
+	else if(8 <= abs(b[p]) && abs(b[p]) <=14)
+	{
+		return 1;
+	}
+	else
+	{
+		return -1;
+	}
+}

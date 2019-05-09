@@ -18,6 +18,7 @@ public:
 	short& operator [](Point&);
 private:
 	void deselect();
+	friend int player(Board&,Point);
 	vector<vector<short>> board;
 	bool checkPointInBoard(Point);
 	void ifPointValidChangeBoard(Point, Point,Point leftUp= Point (0,0),Point rightDown = Point(9, 8));
