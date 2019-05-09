@@ -13,7 +13,7 @@ public:
 	void select(Point);
 	int move(Point, Point);
 	void repent(Board);
-	void randMove(int player);
+	int randMove(int player);
 	vector<short>& operator [](int);
 	short& operator [](Point&);
 private:

@@ -306,7 +306,7 @@ void Board::repent(Board board)
 	changeBoard(board);
 }
 
-void Board::randMove(int player)
+int Board::randMove(int player)
 {
 	
 	vector<Point> chessLocations;
@@ -345,7 +345,7 @@ void Board::randMove(int player)
 		}
 	}
 	int r2 = rand() % chessDestinations.size();
-	move(r1, r2);
+	return move(chessLocations[r1], chessDestinations[r2]);
 }
 
 vector<short>& Board::operator[](int index)
