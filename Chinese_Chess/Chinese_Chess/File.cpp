@@ -52,7 +52,7 @@ void File::writeFile(Board x,int player)
 void File::writeAll(vector < pair<Board, int> >rec)
 {
 	ofstream recOutput("allRec.txt");
-	for (int c = 1; c< rec.size(); c++)
+	for (int c = 0; c < rec.size(); c++)
 	{
 		for (int i = 0; i < 10; i++)
 		{
@@ -70,8 +70,8 @@ void File::writeAll(vector < pair<Board, int> >rec)
 				{
 					recOutput << rec[c].first[Point(i, j)] << " ";
 				}
-				recOutput << endl;
 			}
+			recOutput << endl;
 		}
 		recOutput << rec[c].second << endl;
 	}
