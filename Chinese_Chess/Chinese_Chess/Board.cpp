@@ -1,4 +1,6 @@
 ﻿#include "Board.h"
+#include <time.h>
+#pragma region define
 #define 空格 15
 #define 將 1
 #define 士 2
@@ -15,6 +17,8 @@
 #define 炮 13
 #define 兵 14
 #define size_t int
+#pragma endregion
+
 Board::Board()
 {
 	//15白格 -15灰格 可以吃的為負號 -1~-14 不能吃的為1~14
@@ -300,6 +304,48 @@ int Board::move(Point location, Point destination)
 void Board::repent(Board board)
 {
 	changeBoard(board);
+}
+
+void Board::randMove(int player)
+{
+	
+	vector<Point> chessLocations;
+	for (size_t i = 0; i < 10; i++)
+	{
+		for (size_t j = 0; j < 9; j++)
+		{
+			if (player==0)
+			{
+				if (1<= board[i][j]&&board[i][j] <= 7)
+				{
+					chessLocations.push_back(Point(i, j));
+				}
+			}
+			else if (player==1)
+			{
+				if (8<= board[i][j]&& board[i][j] <= 14)
+				{
+					chessLocations.push_back(Point(i, j));
+				}
+			}
+		}
+	}
+	srand(time(NULL));
+	int r1 = rand()%chessLocations.size();
+	select(chessLocations[r1]);
+	vector<Point> chessDestinations;
+	for (size_t i = 0; i < 10; i++)
+	{
+		for (size_t j = 0; j < 9; j++)
+		{
+			if (board[i][j]<0 )
+			{
+				chessDestinations.push_back(Point(i,j));
+			}
+		}
+	}
+	int r2 = rand() % chessDestinations.size();
+	move(r1, r2);
 }
 
 vector<short>& Board::operator[](int index)
