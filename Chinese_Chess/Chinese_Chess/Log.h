@@ -23,6 +23,7 @@ public:
 	pair<Board, int> LastBoard();
 	pair<Board, int> NextBoard();
 	vector<pair<Board, int> > getRecord();
+	Log(Board initial, int player);
 };
 
 #endif

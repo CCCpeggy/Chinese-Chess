@@ -4,29 +4,29 @@ void Log::WriteLog(Board board, int player)
 {
 	move++;
 	vector<pair<Board, int> >::iterator itt;
-	for (itt = record.begin() + static_cast<unsigned short>(move - 1); itt != record.end(); itt++)
+	for (itt = record.begin() + move; itt != record.end(); )
 	{
-		record.erase(itt);
+		itt = record.erase(itt);
 	}
 	record.push_back(pair<Board,int>(board,player));
 }
 //writelog ©M moveDisplay ¦X¨Ö
 bool Log::isFirst()
 {
-	return move == 1;
+	return move == 0;
 }
 
 bool Log::isFinal()
 {
-	return move == record.size() ;
+	return move == record.size() - 1;
 }
 
 void Log::moveDisplay(int piece, Point original, Point change)
 {
 	vector<string>::iterator it;
-	for (it = displayText.begin() + static_cast<unsigned short>(move - 1); it != displayText.end(); it++)
+	for (it = displayText.begin() + static_cast<unsigned short>(move - 1); it != displayText.end(); )
 	{
-		displayText.erase(it);
+		it = displayText.erase(it);
 	}
 	string status;
 	int tmpMove = move;
@@ -135,4 +135,11 @@ vector<string> Log::getMove()
 vector<pair<Board, int> > Log::getRecord()
 {
 	return record;
+}
+
+Log::Log(Board initial, int player)
+{
+	record.push_back(pair<Board,int>(initial,player));
+	move = 0;
+
 }

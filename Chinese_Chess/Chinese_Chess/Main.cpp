@@ -49,7 +49,6 @@ void setInputCursor();
 void initBoard(); //初始化遊戲
 void selectChess(); //選擇棋子
 int moveChess(); //移動選擇的棋子 //回傳不為-1:遊戲結束
-int randomChess(); //移動選擇的棋子 //回傳不為-1:遊戲結束
 void undo(); //悔棋
 void redo(); //回復
 void showMenu(int); //顯示選單
@@ -68,14 +67,14 @@ int main() {
 	int menuIndex = 0; //選單選取項目
 	int dialogIndex = 0; //對話框選取項目
 	bool selectedChess = false; //是否選取了棋子
-	void (*dialogFunc)() = nullptr; //對話框所要做的動作
+	void(*dialogFunc)() = nullptr; //對話框所要做的動作
 	string dialogContent = ""; //對話框顯示的文字
 
 #pragma region init
 
 	handleInput = GetStdHandle(STD_INPUT_HANDLE);
 	handleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-	
+
 	SetConsoleTitle(projectName);
 
 	DWORD consoleCnt;
@@ -133,13 +132,13 @@ int main() {
 					//遊戲模式
 					if (gameMode == 遊戲模式) {
 						int piecePart = game->board[gamePoint] <= 7 ? 黑方 : 紅方;
-						if (game->board[gamePoint] <= 0 ) {
+						if (game->board[gamePoint] <= 0) {
 							//移動位置
 							int gameStatus = moveChess();
 							if (gameStatus == 1) SHOW_DIALOG("紅色勝利，要重新開始遊戲嗎", initBoard);
 							if (gameStatus == 0) SHOW_DIALOG("黑色勝利，要重新開始遊戲嗎", initBoard);
 						}
-						else if(piecePart == game->getPlayer()){
+						else if (piecePart == game->getPlayer()) {
 							selectChess();
 						}
 					}
@@ -204,7 +203,7 @@ int main() {
 					}
 					//亂數移動位置
 					else if (input.Event.KeyEvent.uChar.AsciiChar == 'R') {
-						pair<Point,Point> randomMovePoint = game->board.randMove(game->getPlayer());
+						pair<Point, Point> randomMovePoint = game->board.randMove(game->getPlayer());
 						selectedPoint = randomMovePoint.first;
 						gamePoint = randomMovePoint.second;
 						int gameStatus = moveChess();
@@ -292,10 +291,10 @@ void visibleCursor(bool visible)
 void initBoard() {
 	gameMode = 遊戲模式;
 	if (game != nullptr) delete game;
-	game = new Game();
-	Board loadBoard = file.loadFile(READ_FILE_NAME).first;
-	game->setPlayer(file.loadFile(READ_FILE_NAME).second);
-	game->board.changeBoard(loadBoard);
+	pair<Board, int> loadFile = file.loadFile(READ_FILE_NAME);
+	game = new Game(loadFile.first, loadFile.second);
+	game->setPlayer(loadFile.second);
+	game->board.changeBoard(loadFile.first);
 	showInterface();
 	visibleCursor(true);
 	setCursor(game->getPlayer() == 紅方 ? 紅棋起始位置 : 黑棋起始位置);
@@ -311,9 +310,9 @@ void selectChess()
 int moveChess()
 {
 	int status = game->board.move(selectedPoint, gamePoint);
+	game->changePlayer();
 	game->log.WriteLog(game->board, game->getPlayer());
 	game->log.moveDisplay(std::abs(game->board[gamePoint]), selectedPoint, gamePoint);
-	game->changePlayer();
 	showInterface();
 	return status;
 }
@@ -325,6 +324,7 @@ void undo()
 	game->setPlayer(lastLog.second);
 	game->board.repent(lastLog.first);
 	showInterface();
+	visibleCursor(true);
 }
 
 void redo()
@@ -334,13 +334,14 @@ void redo()
 	game->setPlayer(nextLog.second);
 	game->board.repent(nextLog.first);
 	showInterface();
+	visibleCursor(true);
 }
 
 void showMenu(int index)
 {
 	visibleCursor(false);
 	setInputCursor();
-	game->drawMenu(index);	
+	game->drawMenu(index);
 }
 
 void showDialog(string content, int number)

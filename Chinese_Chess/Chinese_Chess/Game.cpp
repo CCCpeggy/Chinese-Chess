@@ -2,7 +2,7 @@
 
 Piece Game::pieces[15];
 
-Game::Game()
+Game::Game(Board board,int player):log(board, player)
 {	
 	pieces[1].pos("將", 0);
 	pieces[2].pos("士", 0);

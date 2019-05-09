@@ -16,7 +16,7 @@ private:
 	int player = 0;  // 0 1
 
 public:
-	Game();
+	Game(Board, int);
 	Board board;
 	Log log;
 	static Piece pieces[15];
