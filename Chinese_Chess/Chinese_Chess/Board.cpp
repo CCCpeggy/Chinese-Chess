@@ -306,7 +306,7 @@ void Board::repent(Board board)
 	changeBoard(board);
 }
 
-int Board::randMove(int player)
+pair<Point,Point> Board::randMove(int player)
 {
 	
 	vector<Point> chessLocations;
@@ -331,21 +331,26 @@ int Board::randMove(int player)
 		}
 	}
 	srand(time(NULL));
-	int r1 = rand()%chessLocations.size();
-	select(chessLocations[r1]);
+	int r1 = rand() % chessLocations.size();
 	vector<Point> chessDestinations;
-	for (size_t i = 0; i < 10; i++)
+	do
 	{
-		for (size_t j = 0; j < 9; j++)
+		chessDestinations.clear();
+		select(chessLocations[r1]);	
+		for (size_t i = 0; i < 10; i++)
 		{
-			if (board[i][j]<0 )
+			for (size_t j = 0; j < 9; j++)
 			{
-				chessDestinations.push_back(Point(i,j));
+				if (board[i][j] < 0)
+				{
+					chessDestinations.push_back(Point(i, j));
+				}
 			}
 		}
-	}
+	} while (chessDestinations.empty());
+
 	int r2 = rand() % chessDestinations.size();
-	return move(chessLocations[r1], chessDestinations[r2]);
+	return make_pair(chessLocations[r1], chessDestinations[r2]);
 }
 
 vector<short>& Board::operator[](int index)
