@@ -18,7 +18,7 @@ bool Log::isFirst()
 
 bool Log::isFinal()
 {
-	return move == record.size();
+	return move == record.size() ;
 }
 
 void Log::moveDisplay(int piece, Point original, Point change)

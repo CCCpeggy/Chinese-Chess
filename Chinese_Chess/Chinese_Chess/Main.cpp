@@ -49,6 +49,7 @@ void setInputCursor();
 void initBoard(); //初始化遊戲
 void selectChess(); //選擇棋子
 int moveChess(); //移動選擇的棋子 //回傳不為-1:遊戲結束
+int randomChess(); //移動選擇的棋子 //回傳不為-1:遊戲結束
 void undo(); //悔棋
 void redo(); //回復
 void showMenu(int); //顯示選單
@@ -137,7 +138,7 @@ int main() {
 							//移動位置
 							int gameStatus = moveChess();
 							if (gameStatus == 1) SHOW_DIALOG("紅色勝利，要重新開始遊戲嗎", initBoard);
-							if (gameStatus == 2) SHOW_DIALOG("黑色勝利，要重新開始遊戲嗎", initBoard);
+							if (gameStatus == 0) SHOW_DIALOG("黑色勝利，要重新開始遊戲嗎", initBoard);
 						}
 						else if(piecePart == game->getPlayer()){
 							selectChess();
@@ -168,7 +169,9 @@ int main() {
 					//對話框模式
 					else if (gameMode == 對話框模式) {
 						//選擇"是"
-						if (dialogIndex == 0) dialogFunc();
+						if (dialogIndex == 0) {
+							dialogFunc();
+						}
 						else {
 							backGameMode();
 						}
@@ -190,11 +193,21 @@ int main() {
 				default:
 					//悔棋
 					if (input.Event.KeyEvent.uChar.AsciiChar == '<') {
-						SHOW_DIALOG("確定要悔棋嗎", undo);
+						if (!game->log.isFirst()) {
+							SHOW_DIALOG("確定要悔棋嗎", undo);
+						}
 					}
 					//還原
 					else if (input.Event.KeyEvent.uChar.AsciiChar == '>') {
-						SHOW_DIALOG("確定要還原嗎", redo);
+						if (!game->log.isFinal()) {
+							SHOW_DIALOG("確定要還原嗎", redo);
+						}
+					}
+					else if (input.Event.KeyEvent.uChar.AsciiChar == ')') {
+						pair<Point,Point> randomMovePoint = game->board.randMove(game->getPlayer());
+						selectedPoint = randomMovePoint.first;
+						gamePoint = randomMovePoint.second;
+						moveChess();
 					}
 				}
 			}
@@ -297,22 +310,20 @@ int moveChess()
 
 void undo()
 {
-	if (!game->log.isFirst()) {
-		pair<Board, int> lastLog = game->log.LastBoard();
-		game->setPlayer(lastLog.second);
-		game->board.repent(lastLog.first);
-		showInterface();
-	}
+	gameMode = 遊戲模式;
+	pair<Board, int> lastLog = game->log.LastBoard();
+	game->setPlayer(lastLog.second);
+	game->board.repent(lastLog.first);
+	showInterface();
 }
 
 void redo()
 {
-	if (!game->log.isFinal()) {
-		pair<Board, int> nextLog = game->log.NextBoard();
-		game->setPlayer(nextLog.second);
-		game->board.repent(nextLog.first);
-		showInterface();
-	}
+	gameMode = 遊戲模式;
+	pair<Board, int> nextLog = game->log.NextBoard();
+	game->setPlayer(nextLog.second);
+	game->board.repent(nextLog.first);
+	showInterface();
 }
 
 void showMenu(int index)
