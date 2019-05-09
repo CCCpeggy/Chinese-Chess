@@ -126,7 +126,7 @@ void Board::select(Point p)
 				if (findChess(將).y == p.y)
 				{
 					bool obstacle = false;
-					for (size_t i = (size_t)p.x + 1; i < findChess(將).x; i++)
+					for (size_t i = findChess(將).x + 1; i < p.x; i++)
 					{
 						if (board[i][p.y] != 空格)
 						{
@@ -331,10 +331,11 @@ pair<Point,Point> Board::randMove(int player)
 		}
 	}
 	srand(time(NULL));
-	int r1 = rand() % chessLocations.size();
+	int r1; 
 	vector<Point> chessDestinations;
 	do
 	{
+		r1= rand() % chessLocations.size();
 		chessDestinations.clear();
 		select(chessLocations[r1]);	
 		for (size_t i = 0; i < 10; i++)
