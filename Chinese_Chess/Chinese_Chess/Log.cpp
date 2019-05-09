@@ -23,10 +23,8 @@ bool Log::isFinal()
 
 void Log::moveDisplay(int piece, Point original, Point change)
 {
-	
-	unsigned short step = static_cast<unsigned short>(move - 2);
-	vector<string>::iterator it = displayText.begin() + step;
-	for (; it != displayText.end(); it++)
+	vector<string>::iterator it;
+	for (it = displayText.begin() + static_cast<unsigned short>(move - 1); it != displayText.end(); it++)
 	{
 		displayText.erase(it);
 	}
