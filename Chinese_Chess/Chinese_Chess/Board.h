@@ -19,6 +19,7 @@ public:
 private:
 	void deselect();
 	vector<vector<short>> board;
+	bool checkPointInBoard(Point);
 	void ifPointValidChangeBoard(Point, Point,Point leftUp= Point (0,0),Point rightDown = Point(9, 8));
 	Point findChess(int);//only for ±N«Ó,§ä¤£¨ìret(-1,-1)
 };

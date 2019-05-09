@@ -161,7 +161,12 @@ void Board::select(Point p)
 		case 相:
 			for (size_t i = 0; i < 4; i++)
 			{
-				if ((*this)[p + diagonalStep[i]] == 空格)
+				Point pt = p + diagonalStep[i];
+				if (!checkPointInBoard(pt))
+				{
+					continue;
+				}
+				if ((*this)[pt] == 空格)
 				{
 					ifPointValidChangeBoard(p, p + diagonalStep[i] * 2);
 				}
@@ -189,7 +194,12 @@ void Board::select(Point p)
 		case 傌:
 			for (size_t i = 0; i < 4; i++)
 			{
-				if ((*this)[p + oneStep[i] ] == 空格)
+				Point pt = p + oneStep[i];
+				if (!checkPointInBoard(pt))
+				{
+					continue;
+				}
+				if ((*this)[pt] == 空格)
 				{
 					ifPointValidChangeBoard(p, p + horseStep[2*i]);
 					ifPointValidChangeBoard(p, p + horseStep[2 * i + 1]);
@@ -205,10 +215,15 @@ void Board::select(Point p)
 				bool meetFirst = false;
 				for (size_t n = 1; n <= 9; n++)
 				{
+					Point pt = p + oneStep[i] * n;
+					if (!checkPointInBoard(pt))
+					{
+						continue;
+					}
 					if (!meetFirst)
 					{
 						
-						if ((*this)[p + oneStep[i] * n] == 空格)
+						if ((*this)[pt] == 空格)
 						{
 							ifPointValidChangeBoard(p, p + oneStep[i] * n);							
 						}
@@ -219,7 +234,7 @@ void Board::select(Point p)
 					}
 					else
 					{
-						if ((*this)[p + oneStep[i] * n] != 空格)
+						if ((*this)[pt] != 空格)
 						{
 							ifPointValidChangeBoard(p, p + oneStep[i] * n);
 							break;
@@ -310,6 +325,7 @@ pair<Point,Point> Board::randMove(int player)
 {
 	
 	vector<Point> chessLocations;
+	chessLocations.clear();
 	for (size_t i = 0; i < 10; i++)
 	{
 		for (size_t j = 0; j < 9; j++)
@@ -349,7 +365,6 @@ pair<Point,Point> Board::randMove(int player)
 			}
 		}
 	} while (chessDestinations.empty());
-
 	int r2 = rand() % chessDestinations.size();
 	return make_pair(chessLocations[r1], chessDestinations[r2]);
 }
@@ -367,6 +382,15 @@ short& Board::operator[](Point& p)
 		return zero;
 	}
 	return board[p.x][p.y];
+}
+
+bool Board::checkPointInBoard(Point p)
+{
+	if ((0<=p.x&&p.x<=10)&&(0<=p.y&&p.y<=9))
+	{
+		return true;
+	}
+	return false;
 }
 
 void Board::ifPointValidChangeBoard(Point p,Point dest, Point leftUp, Point rightDown)
