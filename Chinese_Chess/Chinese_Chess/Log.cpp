@@ -10,7 +10,6 @@ void Log::WriteLog(Board board, int player)
 	}
 	record.push_back(pair<Board,int>(board,player));
 }
-//writelog ©M moveDisplay ¦X¨Ö
 bool Log::isFirst()
 {
 	return move == 0;
@@ -142,4 +141,8 @@ Log::Log(Board initial, int player)
 	record.push_back(pair<Board,int>(initial,player));
 	move = 0;
 
+}
+int Log::getMoveNum()
+{
+	return move;
 }

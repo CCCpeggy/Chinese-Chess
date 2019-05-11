@@ -10,7 +10,7 @@ class File
 public:
 	pair<Board,int> loadFile(string);
 	void writeFile(Board x,int player);
-	void writeAll(vector < pair<Board, int> >rec);
+	void writeAll(vector < pair<Board, int> >rec,int move);
 };
 
 #endif

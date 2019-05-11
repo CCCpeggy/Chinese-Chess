@@ -49,10 +49,11 @@ void File::writeFile(Board x,int player)
 	boardOutput.close();
 }
 
-void File::writeAll(vector < pair<Board, int> >rec)
+void File::writeAll(vector < pair<Board, int> >rec,int move)
 {
 	ofstream recOutput("allRec.txt");
-	for (int c = 0; c < rec.size(); c++)
+	vector<pair<Board, int> >::iterator itt;
+	for (int c = 0; c <=move; c++)
 	{
 		for (int i = 0; i < 10; i++)
 		{

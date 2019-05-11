@@ -216,7 +216,7 @@ int main() {
 					}
 					//¦sÀÉ
 					else if (input.Event.KeyEvent.uChar.AsciiChar == 'A') {
-						file.writeAll(game->log.getRecord());
+						file.writeAll(game->log.getRecord(),game->log.getMoveNum());
 					}
 				}
 			}
