@@ -40,7 +40,6 @@ Game::Game(vector<pair<Board, int>>allRec) :log(allRec), board(allRec[allRec.siz
 	pieces[14].pos("兵", 1);
 }
 
-
 ostream& operator<<(ostream& cout, const Piece& p) {
 	if (p.player) {
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | FOREGROUND_RED);
@@ -52,7 +51,6 @@ ostream& operator<<(ostream& cout, const Piece& p) {
 	}
 	return cout;
 }
-
 
 void Game::drawInterface()
 {
@@ -153,14 +151,14 @@ void Game::drawFooter()
 
 void Game::drawStatus()
 {
-	if (player == 0) {
+	if (player == 1) {
 		cout << setw(14) << "現在輪到";
 		SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
 		cout << "紅方";
 		SetConsoleTextAttribute(handleSTDOutput, originalColor);
 		cout << "下棋";
 	}
-	else if (player == 1) {
+	else if (player == 0) {
 		cout << setw(14) << "現在輪到";
 		SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_INTENSITY);
 		cout << "黑方";
@@ -236,16 +234,18 @@ void Game::drawDialog(string output, int index)
 			drawCheckerboard(i, 2);
 			drawStringFormat(i, output, -1);
 
-			cout << endl << setw(24) << "　";
+			cout << endl << setw(24) << "　" ;
 			for (int j = 0; j < 12; j++) {
 				cout << piecegrid.gridLine[2 * i + 1][j];
 			}
-
-
+			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+			cout << piecegrid.dialog[(i - 4) + 1] << endl;
+			SetConsoleTextAttribute(handleSTDOutput, originalColor);
 
 		}
 		else if(i == 5){
 			drawCheckerboard(i, 2);
+
 			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
 			int pos;
 			index == 0 ? pos = 12 : pos = 22;			
@@ -256,9 +256,11 @@ void Game::drawDialog(string output, int index)
 			SetConsoleTextAttribute(handleSTDOutput, BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
 			cout << piecegrid.dialog[(i - 4) + 1][pos] << piecegrid.dialog[(i - 4) + 1][pos + 1];
 			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+
 			for (j = pos + 2; j < 36; j++) {
 				cout << piecegrid.dialog[(i - 4) + 1][j];
 			}
+
 			cout << endl << setw(24) << "　";
 			SetConsoleTextAttribute(handleSTDOutput, originalColor);
 			for (int j = 0; j < 12; j++) {
@@ -339,6 +341,7 @@ void Game::drawOpenTxt(int index) {
 	drawFooter();
 
 }
+
 void Game::drawGridFormat(int row, string output) {
 
 	drawCheckerboard(row, 3);
