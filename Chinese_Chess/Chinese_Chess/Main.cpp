@@ -49,14 +49,12 @@ void setInputCursor();
 
 //遊戲的function
 void initBoard(); //初始化遊戲
-void openfileBoard(string);
 void selectChess(); //選擇棋子
 int moveChess(); //移動選擇的棋子 //回傳不為-1:遊戲結束
 void undo(); //悔棋
 void redo(); //回復
 void showMenu(int); //顯示選單
 void showDialog(string, int); //顯示對話框
-void openfileDialog(int);
 void endGame(); //結束遊戲
 void showInterface(); //重新顯示遊戲畫面
 void showFile(int); //顯示檔案
@@ -172,6 +170,7 @@ int main() {
 						case 2:
 							//載入檔案
 							gameMode = 選檔模式;
+							//fileNames = file.getFileNames();
 							showFile(0);
 							fileIndex = 0;
 							break;
@@ -319,16 +318,6 @@ void initBoard() {
 	setCursor(game->getPlayer() == 紅方 ? 紅棋起始位置 : 黑棋起始位置);
 }
 
-void openfileBoard(string filename) {
-	gameMode = 遊戲模式;
-	if (game != nullptr) delete game;
-	pair<Board, int> loadFile = file.loadFile(filename);
-	game = new Game(loadFile.first, loadFile.second);
-	showInterface();
-	visibleCursor(true);
-	setCursor(game->getPlayer() == 紅方 ? 紅棋起始位置 : 黑棋起始位置);
-}
-
 void selectChess()
 {
 	selectedPoint = gamePoint;
@@ -380,12 +369,6 @@ void showDialog(string content, int number)
 	game->drawDialog(content, number);
 }
 
-void openfileDialog(int index) {
-	visibleCursor(false);
-	setInputCursor();
-	game->drawOpenTxt(index);
-}
-
 void endGame()
 {
 	file.writeFile(game->board, game->getPlayer());
@@ -402,8 +385,7 @@ void showFile(int index)
 {
 	visibleCursor(false);
 	setInputCursor();
-	//fileNames = file.getFileNames();
-	//TODO: showFileName
+	game->drawOpenTxt(index);
 }
 
 void loadFIle(int index) {
