@@ -14,9 +14,10 @@
 #define 遊戲模式 1110
 #define 選單模式 1111
 #define 對話框模式 1112
+#define 選檔模式 1113
 #define SHOW_DIALOG(CONTENT,FUNC){ gameMode = 對話框模式;dialogIndex = 1;dialogFunc = (FUNC);dialogContent = (CONTENT);showDialog(dialogContent, 1);}
-#define 紅方 0
-#define 黑方 1
+#define 紅方 1
+#define 黑方 0
 #define 紅棋起始位置 Point(9,0)
 #define 黑棋起始位置 Point(0,0)
 
@@ -36,6 +37,7 @@ File file;
 Point gamePoint; //目前輸入點所在位置
 Point tmpPoint; //暫存位置
 Point selectedPoint; //選取的象棋所在位置
+vector<string> fileNames;
 int gameMode;
 
 //控制的function
@@ -55,8 +57,8 @@ void showMenu(int); //顯示選單
 void showDialog(string, int); //顯示對話框
 void endGame(); //結束遊戲
 void showInterface(); //重新顯示遊戲畫面
-bool hasChess();
-bool validMove();
+void showFile(int); //顯示檔案
+void loadFIle(int); //載入檔案
 void backGameMode();
 
 #pragma endregion
@@ -66,15 +68,16 @@ int main() {
 	char key;
 	int menuIndex = 0; //選單選取項目
 	int dialogIndex = 0; //對話框選取項目
+	int fileIndex = 0; //檔案選取項目
 	bool selectedChess = false; //是否選取了棋子
-	void (*dialogFunc)() = nullptr; //對話框所要做的動作
+	void(*dialogFunc)() = initBoard; //對話框所要做的動作
 	string dialogContent = ""; //對話框顯示的文字
 
 #pragma region init
 
 	handleInput = GetStdHandle(STD_INPUT_HANDLE);
 	handleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-	
+
 	SetConsoleTitle(projectName);
 
 	DWORD consoleCnt;
@@ -87,7 +90,6 @@ int main() {
 #pragma endregion
 
 	initBoard();
-	file.writeFile(game->board, game->getPlayer());
 #pragma region gameLoop
 	while (ReadConsoleInput(handleInput, &input, 1, &consoleCnt))
 	{
@@ -127,19 +129,29 @@ int main() {
 						//重新顯示對話框
 						showDialog(dialogContent, dialogIndex);
 					}
+					//選檔模式
+					else if (gameMode == 選檔模式) {
+						if (input.Event.KeyEvent.wVirtualKeyCode == VK_UP) menuIndex--;
+						if (input.Event.KeyEvent.wVirtualKeyCode == VK_DOWN) menuIndex++;
+						//計算對話框選取項目
+						fileIndex += fileNames.size();
+						fileIndex = fileIndex % fileNames.size();
+						//重新顯示選檔列表
+						showFile(fileIndex);
+					}
 					break;
 				case VK_RETURN:
 					//按Enter動作
 					//遊戲模式
 					if (gameMode == 遊戲模式) {
 						int piecePart = game->board[gamePoint] <= 7 ? 黑方 : 紅方;
-						if (game->board[gamePoint] <= 0 ) {
+						if (game->board[gamePoint] <= 0) {
 							//移動位置
 							int gameStatus = moveChess();
 							if (gameStatus == 1) SHOW_DIALOG("紅色勝利，要重新開始遊戲嗎", initBoard);
-							if (gameStatus == 2) SHOW_DIALOG("黑色勝利，要重新開始遊戲嗎", initBoard);
+							if (gameStatus == 0) SHOW_DIALOG("黑色勝利，要重新開始遊戲嗎", initBoard);
 						}
-						else if(piecePart == game->getPlayer()){
+						else if (piecePart == game->getPlayer()) {
 							selectChess();
 						}
 					}
@@ -156,8 +168,10 @@ int main() {
 							SHOW_DIALOG("確定要重新開始遊戲嗎", initBoard);
 							break;
 						case 2:
-							//回主選單
-							backGameMode();
+							//載入檔案
+							gameMode = 選檔模式;
+							showFile(0);
+							fileIndex = 0;
 							break;
 						case 3:
 							//結束遊戲
@@ -168,12 +182,18 @@ int main() {
 					//對話框模式
 					else if (gameMode == 對話框模式) {
 						//選擇"是"
-						if (dialogIndex == 0) dialogFunc();
+						if (dialogIndex == 0) {
+							dialogFunc();
+						}
 						else {
 							backGameMode();
 						}
 						//重新顯示畫面
 						showInterface();
+					}
+					//選檔模式
+					else if (gameMode == 選檔模式) {
+						loadFIle(fileIndex);
 					}
 					break;
 				case VK_ESCAPE:
@@ -190,11 +210,32 @@ int main() {
 				default:
 					//悔棋
 					if (input.Event.KeyEvent.uChar.AsciiChar == '<') {
-						SHOW_DIALOG("確定要悔棋嗎", undo);
+						if (!game->log.isFirst()) {
+							SHOW_DIALOG("確定要悔棋嗎", undo);
+						}
 					}
 					//還原
 					else if (input.Event.KeyEvent.uChar.AsciiChar == '>') {
-						SHOW_DIALOG("確定要還原嗎", redo);
+						if (!game->log.isFinal()) {
+							SHOW_DIALOG("確定要還原嗎", redo);
+						}
+					}
+					//亂數移動位置
+					else if (input.Event.KeyEvent.uChar.AsciiChar == 'R') {
+						pair<Point, Point> randomMovePoint = game->board.randMove(game->getPlayer());
+						selectedPoint = randomMovePoint.first;
+						gamePoint = randomMovePoint.second;
+						int gameStatus = moveChess();
+						if (gameStatus == 1) SHOW_DIALOG("紅色勝利，要重新開始遊戲嗎", initBoard);
+						if (gameStatus == 0) SHOW_DIALOG("黑色勝利，要重新開始遊戲嗎", initBoard);
+					}
+					//存檔
+					else if (input.Event.KeyEvent.uChar.AsciiChar == 'S') {
+						file.writeFile(game->board, game->getPlayer());
+					}
+					//存檔
+					else if (input.Event.KeyEvent.uChar.AsciiChar == 'A') {
+						file.writeAll(game->log.getRecord(),game->log.getMoveNum());
 					}
 				}
 			}
@@ -269,13 +310,11 @@ void visibleCursor(bool visible)
 void initBoard() {
 	gameMode = 遊戲模式;
 	if (game != nullptr) delete game;
-	game = new Game();
-	Board loadBoard = file.loadFile(READ_FILE_NAME).first;
-	game->setPlayer(file.loadFile(READ_FILE_NAME).second);
-	game->board.changeBoard(loadBoard);
+	pair<Board, int> loadFile = file.loadFile(READ_FILE_NAME);
+	game = new Game(loadFile.first, loadFile.second);
 	showInterface();
 	visibleCursor(true);
-	setCursor(game->getPlayer() ? 黑棋起始位置 : 紅棋起始位置);
+	setCursor(game->getPlayer() == 紅方 ? 紅棋起始位置 : 黑棋起始位置);
 }
 
 void selectChess()
@@ -288,38 +327,38 @@ void selectChess()
 int moveChess()
 {
 	int status = game->board.move(selectedPoint, gamePoint);
-	if (status == -1) game->log.WriteLog(game->board, game->getPlayer());
-	game->log.moveDisplay(std::abs(game->board[gamePoint]), selectedPoint, gamePoint);
 	game->changePlayer();
+	game->log.WriteLog(game->board, game->getPlayer());
+	game->log.moveDisplay(std::abs(game->board[gamePoint]), selectedPoint, gamePoint);
 	showInterface();
 	return status;
 }
 
 void undo()
 {
-	if (!game->log.isFirst()) {
-		pair<Board, int> lastLog = game->log.LastBoard();
-		game->setPlayer(lastLog.second);
-		game->board.repent(lastLog.first);
-		showInterface();
-	}
+	gameMode = 遊戲模式;
+	pair<Board, int> lastLog = game->log.LastBoard();
+	game->setPlayer(lastLog.second);
+	game->board.repent(lastLog.first);
+	showInterface();
+	visibleCursor(true);
 }
 
 void redo()
 {
-	if (!game->log.isFinal()) {
-		pair<Board, int> nextLog = game->log.NextBoard();
-		game->setPlayer(nextLog.second);
-		game->board.repent(nextLog.first);
-		showInterface();
-	}
+	gameMode = 遊戲模式;
+	pair<Board, int> nextLog = game->log.NextBoard();
+	game->setPlayer(nextLog.second);
+	game->board.repent(nextLog.first);
+	showInterface();
+	visibleCursor(true);
 }
 
 void showMenu(int index)
 {
 	visibleCursor(false);
 	setInputCursor();
-	game->drawMenu(index);	
+	game->drawMenu(index);
 }
 
 void showDialog(string content, int number)
@@ -341,14 +380,23 @@ void showInterface() {
 	setCursor(gamePoint);
 }
 
-bool hasChess()
+void showFile(int index)
 {
-	return game->board[gamePoint] != 0;
+	visibleCursor(false);
+	setInputCursor();
+	//fileNames = file.getFileNames();
+	//TODO: showFileName
 }
 
-bool validMove()
-{
-	return game->board[gamePoint] <= 0;
+void loadFIle(int index) {
+	//vector<pair<Board, int>> fileBoards = file.loadAll(fileNames[index]);
+	vector<pair<Board, int>> fileBoards = file.loadAll("allRec.txt");
+	gameMode = 遊戲模式;
+	if (game != nullptr) delete game;
+	game = new Game(fileBoards);
+	showInterface();
+	visibleCursor(true);
+	setCursor(game->getPlayer() == 紅方 ? 紅棋起始位置 : 黑棋起始位置);
 }
 
 void backGameMode()

@@ -126,7 +126,7 @@ void Board::select(Point p)
 				if (findChess(將).y == p.y)
 				{
 					bool obstacle = false;
-					for (size_t i = (size_t)p.x + 1; i < findChess(將).x; i++)
+					for (size_t i = findChess(將).x + 1; i < p.x; i++)
 					{
 						if (board[i][p.y] != 空格)
 						{
@@ -161,7 +161,12 @@ void Board::select(Point p)
 		case 相:
 			for (size_t i = 0; i < 4; i++)
 			{
-				if ((*this)[p + diagonalStep[i]] == 空格)
+				Point pt = p + diagonalStep[i];
+				if (!checkPointInBoard(pt))
+				{
+					continue;
+				}
+				if ((*this)[pt] == 空格)
 				{
 					ifPointValidChangeBoard(p, p + diagonalStep[i] * 2);
 				}
@@ -176,7 +181,12 @@ void Board::select(Point p)
 				for (size_t n = 1; n <= 9; n++)
 				{
 					ifPointValidChangeBoard(p, p + 	oneStep[i] * n);
-					if ((*this)[p + oneStep[i] * n] != -空格)
+					Point pt = p + oneStep[i]*n;
+					if (!checkPointInBoard(pt))
+					{
+						continue;
+					}
+					if ((*this)[pt] != -空格)
 					{
 						break;
 					}
@@ -189,7 +199,12 @@ void Board::select(Point p)
 		case 傌:
 			for (size_t i = 0; i < 4; i++)
 			{
-				if ((*this)[p + oneStep[i] ] == 空格)
+				Point pt = p + oneStep[i];
+				if (!checkPointInBoard(pt))
+				{
+					continue;
+				}
+				if ((*this)[pt] == 空格)
 				{
 					ifPointValidChangeBoard(p, p + horseStep[2*i]);
 					ifPointValidChangeBoard(p, p + horseStep[2 * i + 1]);
@@ -205,10 +220,15 @@ void Board::select(Point p)
 				bool meetFirst = false;
 				for (size_t n = 1; n <= 9; n++)
 				{
+					Point pt = p + oneStep[i] * n;
+					if (!checkPointInBoard(pt))
+					{
+						continue;
+					}
 					if (!meetFirst)
 					{
 						
-						if ((*this)[p + oneStep[i] * n] == 空格)
+						if ((*this)[pt] == 空格)
 						{
 							ifPointValidChangeBoard(p, p + oneStep[i] * n);							
 						}
@@ -219,7 +239,7 @@ void Board::select(Point p)
 					}
 					else
 					{
-						if ((*this)[p + oneStep[i] * n] != 空格)
+						if ((*this)[pt] != 空格)
 						{
 							ifPointValidChangeBoard(p, p + oneStep[i] * n);
 							break;
@@ -306,10 +326,11 @@ void Board::repent(Board board)
 	changeBoard(board);
 }
 
-int Board::randMove(int player)
+pair<Point,Point> Board::randMove(int player)
 {
 	
 	vector<Point> chessLocations;
+	chessLocations.clear();
 	for (size_t i = 0; i < 10; i++)
 	{
 		for (size_t j = 0; j < 9; j++)
@@ -331,21 +352,26 @@ int Board::randMove(int player)
 		}
 	}
 	srand(time(NULL));
-	int r1 = rand()%chessLocations.size();
-	select(chessLocations[r1]);
+	int r1; 
 	vector<Point> chessDestinations;
-	for (size_t i = 0; i < 10; i++)
+	do
 	{
-		for (size_t j = 0; j < 9; j++)
+		r1= rand() % chessLocations.size();
+		chessDestinations.clear();
+		select(chessLocations[r1]);	
+		for (size_t i = 0; i < 10; i++)
 		{
-			if (board[i][j]<0 )
+			for (size_t j = 0; j < 9; j++)
 			{
-				chessDestinations.push_back(Point(i,j));
+				if (board[i][j] < 0)
+				{
+					chessDestinations.push_back(Point(i, j));
+				}
 			}
 		}
-	}
+	} while (chessDestinations.empty());
 	int r2 = rand() % chessDestinations.size();
-	return move(chessLocations[r1], chessDestinations[r2]);
+	return make_pair(chessLocations[r1], chessDestinations[r2]);
 }
 
 vector<short>& Board::operator[](int index)
@@ -363,11 +389,20 @@ short& Board::operator[](Point& p)
 	return board[p.x][p.y];
 }
 
+bool Board::checkPointInBoard(Point p)
+{
+	if ((0<=p.x&&p.x<=10)&&(0<=p.y&&p.y<=9))
+	{
+		return true;
+	}
+	return false;
+}
+
 void Board::ifPointValidChangeBoard(Point p,Point dest, Point leftUp, Point rightDown)
 {
 	if (leftUp.x<= dest.x&& leftUp.y <= dest.y&&
 		dest.x <= rightDown.x && dest.y <= rightDown.y&&
-		(board[p.x][p.y]<=7!= board[dest.x][dest.y] <= 7|| board[dest.x][dest.y] ==空格)
+		(player(*this,p)!= player(*this, dest))
 		)
 	{
 		board[dest.x][dest.y] *= -1;
@@ -389,3 +424,18 @@ Point Board::findChess(int chessType)
 	return Point(-1,-1);
 }
 
+int player(Board& b, Point p)
+{
+	if (0<=abs(b[p])&&abs(b[p])<=7)
+	{
+		return 0;
+	}
+	else if(8 <= abs(b[p]) && abs(b[p]) <=14)
+	{
+		return 1;
+	}
+	else
+	{
+		return -1;
+	}
+}

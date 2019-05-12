@@ -4,29 +4,28 @@ void Log::WriteLog(Board board, int player)
 {
 	move++;
 	vector<pair<Board, int> >::iterator itt;
-	for (itt = record.begin() + static_cast<unsigned short>(move - 1); itt != record.end(); itt++)
+	for (itt = record.begin() + move; itt != record.end(); )
 	{
-		record.erase(itt);
+		itt = record.erase(itt);
 	}
 	record.push_back(pair<Board,int>(board,player));
 }
-//writelog 和 moveDisplay 合併
 bool Log::isFirst()
 {
-	return move == 1;
+	return move == 0;
 }
 
 bool Log::isFinal()
 {
-	return move == record.size();
+	return move == record.size() - 1;
 }
 
 void Log::moveDisplay(int piece, Point original, Point change)
 {
 	vector<string>::iterator it;
-	for (it = displayText.begin() + static_cast<unsigned short>(move - 1); it != displayText.end(); it++)
+	for (it = displayText.begin() + static_cast<unsigned short>(move - 1); it != displayText.end(); )
 	{
-		displayText.erase(it);
+		it = displayText.erase(it);
 	}
 	string status;
 	int tmpMove = move;
@@ -129,5 +128,55 @@ pair<Board, int> Log::NextBoard()
 
 vector<string> Log::getMove()
 {
-	return displayText;
+	return vector<string>(displayText.begin(), displayText.begin() + move);
 }
+
+vector<pair<Board, int> > Log::getRecord()
+{
+	return record;
+}
+
+Log::Log(Board initial, int player)
+{
+	record.push_back(pair<Board,int>(initial,player));
+	move = 0;
+
+}
+int Log::getMoveNum()
+{
+	return move;
+}
+
+Log::Log(vector<pair<Board, int>>allRec)
+{
+	if (allRec.size() < 1)return;
+	move = 0;
+	record.push_back(pair<Board, int>(allRec[0].first, allRec[0].second));
+	Point original;
+	Point change;
+	int piece;
+	//比較2個board
+	for (int c = 0; c < allRec.size() - 1; c++)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				if (allRec[c].first[i][j] != allRec[c + 1].first[i][j])
+				{
+					if (allRec[c + 1].first[i][j] == 15) {
+						original = Point(i, j);
+					}
+					else {
+						piece = allRec[c + 1].first[i][j];
+						change = Point(i, j);
+					}
+					
+				}
+			}
+		}
+		WriteLog(allRec[c + 1].first, allRec[c + 1].second);
+		moveDisplay(piece, original, change);
+	}
+}
+
