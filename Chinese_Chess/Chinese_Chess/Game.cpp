@@ -1,43 +1,30 @@
 ﻿#include "Game.h"
 
-Piece Game::pieces[15];
+Piece Game::pieces[15] = {
+	  Piece()
+	, Piece("將", 0)
+	, Piece("士", 0)
+	, Piece("象", 0)
+	, Piece("車", 0)
+	, Piece("馬", 0)
+	, Piece("包", 0)
+	, Piece("卒", 0)
+	, Piece("帥", 1)
+	, Piece("仕", 1)
+	, Piece("相", 1)
+	, Piece("車", 1)
+	, Piece("傌", 1)
+	, Piece("炮", 1)
+	, Piece("兵", 1)
+
+};
 
 Game::Game(Board board,int player):log(board, player),board(board),player()
 {	
-	pieces[1].pos("將", 0);
-	pieces[2].pos("士", 0);
-	pieces[3].pos("象", 0);
-	pieces[4].pos("車", 0);
-	pieces[5].pos("馬", 0);
-	pieces[6].pos("包", 0);
-	pieces[7].pos("卒", 0);
-
-	pieces[8].pos("帥", 1);
-	pieces[9].pos("仕", 1);
-	pieces[10].pos("相", 1);
-	pieces[11].pos("車", 1);
-	pieces[12].pos("傌", 1);
-	pieces[13].pos("炮", 1);
-	pieces[14].pos("兵", 1);
 }
 
 Game::Game(vector<pair<Board, int>>allRec) :log(allRec), board(allRec[allRec.size()-1].first), player(allRec[allRec.size() - 1].second)
 {
-	pieces[1].pos("將", 0);
-	pieces[2].pos("士", 0);
-	pieces[3].pos("象", 0);
-	pieces[4].pos("車", 0);
-	pieces[5].pos("馬", 0);
-	pieces[6].pos("包", 0);
-	pieces[7].pos("卒", 0);
-
-	pieces[8].pos("帥", 1);
-	pieces[9].pos("仕", 1);
-	pieces[10].pos("相", 1);
-	pieces[11].pos("車", 1);
-	pieces[12].pos("傌", 1);
-	pieces[13].pos("炮", 1);
-	pieces[14].pos("兵", 1);
 }
 
 ostream& operator<<(ostream& cout, const Piece& p) {
