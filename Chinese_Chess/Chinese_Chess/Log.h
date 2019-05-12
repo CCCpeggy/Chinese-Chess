@@ -25,6 +25,7 @@ public:
 	vector<pair<Board, int> > getRecord();
 	Log(Board initial, int player);
 	int getMoveNum();
+	void displayFile(vector<pair<Board, int>>allRec);
 };
 
 #endif

@@ -78,3 +78,28 @@ void File::writeAll(vector < pair<Board, int> >rec,int move)
 	}
 	recOutput.close();
 }
+
+vector<pair<Board, int>> File::loadAll(string filename)
+{
+	ifstream boardRec;
+	boardRec.open(filename);
+	short temp;
+	Board a;
+	int player;
+	vector<pair<Board, int>>allRec;
+	while (boardRec>>temp)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				boardRec >> temp;
+				if (temp == 0) { temp = 15; }
+				a[Point(i, j)] = temp;
+			}
+		}
+		boardRec >> player;
+		allRec.push_back(pair<Board, int>(a, player));
+	}
+	return allRec;
+}

@@ -146,3 +146,34 @@ int Log::getMoveNum()
 {
 	return move;
 }
+
+void Log::displayFile(vector<pair<Board, int>>allRec)
+{
+	Point original;
+	Point change;
+	int piece;
+	//¤ñ¸û2­Óboard
+	for (int c = 0; c < allRec.size()-1; c++)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				if (allRec[c].first[i][j] != allRec[c + 1].first[i][j])
+				{
+					if (allRec[c + 1].first[i][j] != 0 && allRec[c].first[i][j] == 0)
+					{
+						change = Point(i, j);
+						piece = allRec[c + 1].first[i][j];
+					}
+					else if (allRec[c + 1].first[i][j] == 0 && allRec[c].first[i][j] != 0)
+					{
+						original = Point(i, j);
+					}
+				}
+			}
+		}
+		moveDisplay(piece, original, change);
+	}
+}
+
