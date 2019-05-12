@@ -158,6 +158,20 @@ void Board::select(Point p)
 	#pragma endregion
 	#pragma region 象 相
 		case 象:
+			for (size_t i = 0; i < 4; i++)
+			{
+				Point pt = p + diagonalStep[i];
+				if (!checkPointInBoard(pt))
+				{
+					continue;
+				}
+				if ((*this)[pt] == 空格)
+				{	
+					
+					ifPointValidChangeBoard(p, p + diagonalStep[i] * 2,Point(0,0),Point(4,8));
+				}
+			}
+			break;
 		case 相:
 			for (size_t i = 0; i < 4; i++)
 			{
@@ -168,7 +182,8 @@ void Board::select(Point p)
 				}
 				if ((*this)[pt] == 空格)
 				{
-					ifPointValidChangeBoard(p, p + diagonalStep[i] * 2);
+
+					ifPointValidChangeBoard(p, p + diagonalStep[i] * 2, Point(5, 0), Point(9, 8));
 				}
 			}
 			break;
@@ -298,19 +313,12 @@ void Board::deselect()
 		}
 	}
 }
-
-
-
-int Board::move(Point location, Point destination)
-{
-	board[destination.x][destination.y] = board[location.x][location.y];
-	board[location.x][location.y] = 空格;
-	deselect();
-	if (findChess(將)==Point(-1,-1))
+int Board::situation(Board b) {
+	if (b.findChess(將) == Point(-1, -1))
 	{
 		return 1;//red win
 	}
-	else if(findChess(帥) == Point(-1, -1))
+	else if (b.findChess(帥) == Point(-1, -1))
 	{
 		return 0;//black win
 	}
@@ -318,7 +326,15 @@ int Board::move(Point location, Point destination)
 	{
 		return -1;//nothing happened
 	}
-	
+}
+
+
+int Board::move(Point location, Point destination)
+{
+	board[destination.x][destination.y] = board[location.x][location.y];
+	board[location.x][location.y] = 空格;
+	deselect();
+	return situation(*this);
 }
 
 void Board::repent(Board board)

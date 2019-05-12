@@ -16,6 +16,7 @@ public:
 	pair<Point, Point> randMove(int player);//return 位置 目的地
 	vector<short>& operator [](int);
 	short& operator [](Point&);
+	int situation(Board);//return 有無人勝利
 private:
 	void deselect();
 	friend int player(Board&,Point);
