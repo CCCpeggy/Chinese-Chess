@@ -119,6 +119,7 @@ bool isTxt(string a)
 	}
 	else { return false; }
 }
+
 vector<string>File::listFile()
 {
 		vector<string>fileName;

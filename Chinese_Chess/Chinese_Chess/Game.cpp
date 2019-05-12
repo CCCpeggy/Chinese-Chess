@@ -265,28 +265,19 @@ void Game::drawDialog(string output, int index)
 	drawFooter();
 }
 
-void Game::drawOpenTxt(int index) {
+void Game::drawOpenTxt(int index, vector<string> filename) {
 
-	
-	//讀取資料夾所有txt
-	char buffer[_MAX_PATH];
-	_getcwd(buffer, _MAX_PATH);
-	char* extenName = "*.txt";
-	unsigned long long hFile;
-	struct _finddata_t fileName;
-	hFile = _findfirst(extenName, &fileName);
-	do {
-		filename.push_back(fileName.name);
-	} while (hFile != -1 && _findnext(hFile, &fileName) == 0);
+	int filecount = filename.size();
+	int filecountremainder = filecount % 3;
+	int count = (index + 1 )/ filecount ;
 
-	//計算資料夾有txt的數量
-	if (txtcount < 3) {
-		for (int i = 3 - txtcount; i > 0; i--) {
-			filename.push_back("　　　　");
+
+	if (filecountremainder != 0) {
+		for (int i = 0; i < 3 - filecountremainder; i++) {
+			filename.push_back("　　　　　　　　　　　");
 		}
 	}
 
-	
 	drawBanner();
 	for (int i = 0; i < 10; i++) {
 
@@ -295,19 +286,19 @@ void Game::drawOpenTxt(int index) {
 		}
 		else if (i == 4) {
 			drawCheckerboard(i, 2);
-			index % 3 == 0 ? drawStringFormat(i, filename[(i - 4) * 2], TRUE) : drawStringFormat(i, filename[(i - 4) * 2], FALSE);
+			index % 3 == 0 ? drawStringFormat(i, filename[((i - 4) * 2) + (count * 3)], TRUE) : drawStringFormat(i, filename[((i - 4) * 2) + (count * 3)], FALSE);
 			cout << endl << setw(28) << "　";
 
 			for (int j = 0; j < 12; j++) {
 				cout << piecegrid.gridLine[2 * i + 1][j];
 			}
-			index % 3 == 1 ? drawStringFormat(i, filename[(i - 4) * 2 + 1], TRUE) : drawStringFormat(i, filename[(i - 4) * 2 + 1], FALSE);
+			index % 3 == 1 ? drawStringFormat(i, filename[((i - 4) * 2 + 1 )+ (count * 3)], TRUE) : drawStringFormat(i, filename[((i - 4) * 2 + 1) + (count * 3)], FALSE);
 
 		}
 		else if (i == 5) {
 			cout << endl;
 			drawCheckerboard(i, 2);
-			index % 3 == 2 ? drawStringFormat(i, filename[(i - 4) * 2] , TRUE) : drawStringFormat(i, filename[(i - 4) * 2], FALSE);
+			index % 3 == 2 ? drawStringFormat(i, filename[((i - 4) * 2 )+ (count * 3)] , TRUE) : drawStringFormat(i, filename[((i - 4) * 2) + (count * 3)], FALSE);
 			cout << endl << setw(28) << "　";
 			for (int j = 0; j < 12; j++) {
 				cout << piecegrid.gridLine[2 * i + 1][j];

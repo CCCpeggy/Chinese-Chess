@@ -24,11 +24,8 @@ public:
 	Log log;
 	static Piece pieces[15];
 	Piece piecegrid;
-	vector<string>filename;
 	HANDLE handleSTDOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	WORD originalColor = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
-	int txtcount = filename.size();
-
 
 	//draw console
 	void drawInterface(); //將Game的資料顯示
@@ -41,7 +38,7 @@ public:
 	void drawDialog(string, int);  //Button是否, 1是 0否
 	void drawGridFormat(int, string);
 	void drawStringFormat(int, string, int);
-	void drawOpenTxt(int);
+	void drawOpenTxt(int, vector<string>);
 
 	//player
 	void setPlayer(int);

@@ -132,7 +132,7 @@ int main() {
 						//計算對話框選取項目
 						fileIndex += fileNames.size();
 						if(fileNames.size() > 0) fileIndex = fileIndex % fileNames.size();
-						//重新顯示選檔列表
+						//重新顯示選檔列表					
 						showFile(fileIndex);
 					}
 					break;
@@ -166,7 +166,7 @@ int main() {
 						case 2:
 							//載入檔案
 							gameMode = 選檔模式;
-							//fileNames = file.getFileNames();
+							fileNames = file.listFile();
 							showFile(0);
 							fileIndex = 0;
 							break;
@@ -379,12 +379,11 @@ void showFile(int index)
 {
 	visibleCursor(false);
 	setInputCursor();
-	game->drawOpenTxt(index);
+	game->drawOpenTxt(index,fileNames);
 }
 
 void loadFIle(int index) {
-	//vector<pair<Board, int>> fileBoards = file.loadAll(fileNames[index]);
-	vector<pair<Board, int>> fileBoards = file.loadAll("allRec.txt");
+	vector<pair<Board, int>> fileBoards = file.loadAll(fileNames[index]);
 	gameMode = 遊戲模式;
 	if (game != nullptr) delete game;
 	game = new Game(fileBoards);
