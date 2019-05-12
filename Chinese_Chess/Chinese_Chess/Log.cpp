@@ -128,7 +128,7 @@ pair<Board, int> Log::NextBoard()
 
 vector<string> Log::getMove()
 {
-	return displayText;
+	return vector<string>(displayText.begin(), displayText.begin() + move);
 }
 
 vector<pair<Board, int> > Log::getRecord()
@@ -149,11 +149,14 @@ int Log::getMoveNum()
 
 void Log::displayFile(vector<pair<Board, int>>allRec)
 {
+	if (allRec.size() < 1)return;
+	move = 0;
+	record.push_back(pair<Board, int>(allRec[0].first, allRec[0].second));
 	Point original;
 	Point change;
 	int piece;
 	//¤ñ¸û2­Óboard
-	for (int c = 0; c < allRec.size()-1; c++)
+	for (int c = 0; c < allRec.size() - 1; c++)
 	{
 		for (int i = 0; i < 10; i++)
 		{
@@ -161,18 +164,18 @@ void Log::displayFile(vector<pair<Board, int>>allRec)
 			{
 				if (allRec[c].first[i][j] != allRec[c + 1].first[i][j])
 				{
-					if (allRec[c + 1].first[i][j] != 0 && allRec[c].first[i][j] == 0)
-					{
-						change = Point(i, j);
-						piece = allRec[c + 1].first[i][j];
-					}
-					else if (allRec[c + 1].first[i][j] == 0 && allRec[c].first[i][j] != 0)
-					{
+					if (allRec[c + 1].first[i][j] == 15) {
 						original = Point(i, j);
 					}
+					else {
+						piece = allRec[c + 1].first[i][j];
+						change = Point(i, j);
+					}
+					
 				}
 			}
 		}
+		WriteLog(allRec[c + 1].first, allRec[c + 1].second);
 		moveDisplay(piece, original, change);
 	}
 }

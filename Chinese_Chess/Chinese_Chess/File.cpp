@@ -87,13 +87,13 @@ vector<pair<Board, int>> File::loadAll(string filename)
 	Board a;
 	int player;
 	vector<pair<Board, int>>allRec;
-	while (boardRec>>temp)
+	while (true)
 	{
 		for (int i = 0; i < 10; i++)
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				boardRec >> temp;
+				if(!(boardRec >> temp)) return allRec;
 				if (temp == 0) { temp = 15; }
 				a[Point(i, j)] = temp;
 			}
@@ -101,5 +101,4 @@ vector<pair<Board, int>> File::loadAll(string filename)
 		boardRec >> player;
 		allRec.push_back(pair<Board, int>(a, player));
 	}
-	return allRec;
 }
