@@ -99,13 +99,13 @@ void Game::drawCheckerboard(int i, int mode) {//mode:0->一般, 1->目錄, 2, 3-
 		drawStatus();
 	}
 	else if (i == 7) {
-		cout << setw(22) << "←　→　方向鍵控制光標";
+		cout << setw(26) << "←　→　方向鍵控制光標";
 	}
 	if (mode == 0 && i != 9) {
 		if (i == 4 || i == 5) {
 			cout << "　　　　　　　　　　　　";
 		}
-		cout << endl << setw(86) << piecegrid.gridLine[2 * i + 1] << endl;
+		cout << endl << setw(92) << piecegrid.gridLine[2 * i + 1] << endl;
 	}
 
 }
@@ -138,14 +138,14 @@ void Game::drawFooter()
 void Game::drawStatus()
 {
 	if (player == 1) {
-		cout << setw(14) << "現在輪到";
+		cout << setw(18) << "現在輪到";
 		SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
 		cout << "紅方";
 		SetConsoleTextAttribute(handleSTDOutput, originalColor);
 		cout << "下棋";
 	}
 	else if (player == 0) {
-		cout << setw(14) << "現在輪到";
+		cout << setw(18) << "現在輪到";
 		SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_INTENSITY);
 		cout << "黑方";
 		SetConsoleTextAttribute(handleSTDOutput, originalColor);
