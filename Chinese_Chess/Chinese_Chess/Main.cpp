@@ -14,9 +14,7 @@
 #define 遊戲模式 1110
 #define 選單模式 1111
 #define 對話框模式 1112
-#define 開舊檔框模式 1113
 #define SHOW_DIALOG(CONTENT,FUNC){ gameMode = 對話框模式;dialogIndex = 1;dialogFunc = (FUNC);dialogContent = (CONTENT);showDialog(dialogContent, 1);}
-#define SHOW_OPENFILEDIALOG(FUNC){ gameMode = 開舊檔框模式;dialogIndex = 0;strDialogFunc = (FUNC);openrecrodfile(dialogIndex);}
 #define 紅方 0
 #define 黑方 1
 #define 紅棋起始位置 Point(9,0)
@@ -49,14 +47,12 @@ void setInputCursor();
 
 //遊戲的function
 void initBoard(); //初始化遊戲
-void openfileBoard(string); //開啟舊檔遊戲
 void selectChess(); //選擇棋子
 int moveChess(); //移動選擇的棋子 //回傳不為-1:遊戲結束
 void undo(); //悔棋
 void redo(); //回復
 void showMenu(int); //顯示選單
 void showDialog(string, int); //顯示對話框
-void openrecrodfile(int);//開啟舊檔
 void endGame(); //結束遊戲
 void showInterface(); //重新顯示遊戲畫面
 bool hasChess();
@@ -72,7 +68,6 @@ int main() {
 	int dialogIndex = 0; //對話框選取項目
 	bool selectedChess = false; //是否選取了棋子
 	void (*dialogFunc)() = nullptr; //對話框所要做的動作
-	void(*strDialogFunc)(string) = nullptr; //對話框所要做的動作
 	string dialogContent = ""; //對話框顯示的文字
 
 #pragma region init
@@ -132,16 +127,6 @@ int main() {
 						//重新顯示對話框
 						showDialog(dialogContent, dialogIndex);
 					}
-					//開舊檔框模式
-					else if (gameMode == 開舊檔框模式) {
-						if (input.Event.KeyEvent.wVirtualKeyCode == VK_UP) dialogIndex--;
-						if (input.Event.KeyEvent.wVirtualKeyCode == VK_DOWN) dialogIndex++;
-						//計算對話框選取項目
-						dialogIndex += 4;
-						dialogIndex = dialogIndex % 4;
-						//重新顯示對話框
-						openrecrodfile(dialogIndex);
-					}
 					break;
 				case VK_RETURN:
 					//按Enter動作
@@ -171,8 +156,8 @@ int main() {
 							SHOW_DIALOG("確定要重新開始遊戲嗎", initBoard);
 							break;
 						case 2:
-							//開啟舊檔
-							SHOW_OPENFILEDIALOG(openfileBoard);
+							//回主選單
+							backGameMode();
 							break;
 						case 3:
 							//結束遊戲
@@ -180,28 +165,12 @@ int main() {
 							break;
 						}
 					}
-					
 					//對話框模式
 					else if (gameMode == 對話框模式) {
 						//選擇"是"
 						if (dialogIndex == 0) dialogFunc();
 						else {
 							backGameMode();
-						}
-						//重新顯示畫面
-						showInterface();
-					}
-					//開舊檔框模式
-					else if (gameMode == 開舊檔框模式) {
-						//選擇第一個檔
-						if (dialogIndex == 0) {
-							strDialogFunc(" ");
-						} 
-						else if (dialogIndex == 1) {
-							strDialogFunc(" ");
-						}
-						else if (dialogIndex == 2) {
-							strDialogFunc(" ");
 						}
 						//重新顯示畫面
 						showInterface();
@@ -221,11 +190,11 @@ int main() {
 				default:
 					//悔棋
 					if (input.Event.KeyEvent.uChar.AsciiChar == '<') {
-						SHOW_DIALOG("確定要悔棋嗎", undo, 1);
+						SHOW_DIALOG("確定要悔棋嗎", undo);
 					}
 					//還原
 					else if (input.Event.KeyEvent.uChar.AsciiChar == '>') {
-						SHOW_DIALOG("確定要還原嗎", redo, 1);
+						SHOW_DIALOG("確定要還原嗎", redo);
 					}
 				}
 			}
@@ -309,18 +278,6 @@ void initBoard() {
 	setCursor(game->getPlayer() ? 黑棋起始位置 : 紅棋起始位置);
 }
 
-void openfileBoard(string filename) {
-	gameMode = 遊戲模式;
-	if (game != nullptr) delete game;
-	game = new Game();
-	Board loadBoard = file.loadFile(filename).first;
-	game->setPlayer(file.loadFile(filename).second);
-	game->board.changeBoard(loadBoard);
-	showInterface();
-	visibleCursor(true);
-	setCursor(game->getPlayer() ? 黑棋起始位置 : 紅棋起始位置);
-}
-
 void selectChess()
 {
 	selectedPoint = gamePoint;
@@ -370,12 +327,6 @@ void showDialog(string content, int number)
 	visibleCursor(false);
 	setInputCursor();
 	game->drawDialog(content, number);
-}
-
-void openrecrodfile(int index) {
-	visibleCursor(false);
-	setInputCursor();
-	game->drawOpenTxt(index);
 }
 
 void endGame()
