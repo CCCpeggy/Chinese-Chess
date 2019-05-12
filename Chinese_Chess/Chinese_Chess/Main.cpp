@@ -14,6 +14,7 @@
 #define 遊戲模式 1110
 #define 選單模式 1111
 #define 對話框模式 1112
+#define 選檔模式 1113
 #define SHOW_DIALOG(CONTENT,FUNC){ gameMode = 對話框模式;dialogIndex = 1;dialogFunc = (FUNC);dialogContent = (CONTENT);showDialog(dialogContent, 1);}
 #define 紅方 1
 #define 黑方 0
@@ -36,6 +37,7 @@ File file;
 Point gamePoint; //目前輸入點所在位置
 Point tmpPoint; //暫存位置
 Point selectedPoint; //選取的象棋所在位置
+vector<string> fileNames;
 int gameMode;
 
 //控制的function
@@ -55,8 +57,8 @@ void showMenu(int); //顯示選單
 void showDialog(string, int); //顯示對話框
 void endGame(); //結束遊戲
 void showInterface(); //重新顯示遊戲畫面
-bool hasChess();
-bool validMove();
+void showFile(int); //顯示檔案
+void loadFIle(int); //載入檔案
 void backGameMode();
 
 #pragma endregion
@@ -66,8 +68,9 @@ int main() {
 	char key;
 	int menuIndex = 0; //選單選取項目
 	int dialogIndex = 0; //對話框選取項目
+	int fileIndex = 0; //檔案選取項目
 	bool selectedChess = false; //是否選取了棋子
-	void(*dialogFunc)() = nullptr; //對話框所要做的動作
+	void(*dialogFunc)() = initBoard; //對話框所要做的動作
 	string dialogContent = ""; //對話框顯示的文字
 
 #pragma region init
@@ -126,6 +129,16 @@ int main() {
 						//重新顯示對話框
 						showDialog(dialogContent, dialogIndex);
 					}
+					//選檔模式
+					else if (gameMode == 選檔模式) {
+						if (input.Event.KeyEvent.wVirtualKeyCode == VK_UP) menuIndex--;
+						if (input.Event.KeyEvent.wVirtualKeyCode == VK_DOWN) menuIndex++;
+						//計算對話框選取項目
+						fileIndex += fileNames.size();
+						fileIndex = fileIndex % fileNames.size();
+						//重新顯示選檔列表
+						showFile(fileIndex);
+					}
 					break;
 				case VK_RETURN:
 					//按Enter動作
@@ -155,8 +168,10 @@ int main() {
 							SHOW_DIALOG("確定要重新開始遊戲嗎", initBoard);
 							break;
 						case 2:
-							//回主選單
-							backGameMode();
+							//載入檔案
+							gameMode = 選檔模式;
+							showFile(0);
+							fileIndex = 0;
 							break;
 						case 3:
 							//結束遊戲
@@ -175,6 +190,10 @@ int main() {
 						}
 						//重新顯示畫面
 						showInterface();
+					}
+					//選檔模式
+					else if (gameMode == 選檔模式) {
+						loadFIle(fileIndex);
 					}
 					break;
 				case VK_ESCAPE:
@@ -293,8 +312,6 @@ void initBoard() {
 	if (game != nullptr) delete game;
 	pair<Board, int> loadFile = file.loadFile(READ_FILE_NAME);
 	game = new Game(loadFile.first, loadFile.second);
-	game->setPlayer(loadFile.second);
-	game->board.changeBoard(loadFile.first);
 	showInterface();
 	visibleCursor(true);
 	setCursor(game->getPlayer() == 紅方 ? 紅棋起始位置 : 黑棋起始位置);
@@ -363,14 +380,24 @@ void showInterface() {
 	setCursor(gamePoint);
 }
 
-bool hasChess()
+void showFile(int index)
 {
-	return game->board[gamePoint] != 0;
+	visibleCursor(false);
+	setInputCursor();
+	//fileNames = file.getFileNames();
+	//TODO: showFileName
 }
 
-bool validMove()
-{
-	return game->board[gamePoint] <= 0;
+void loadFIle(int index) {
+	//vector<pair<Board, int>> fileBoards = file.loadAll(fileNames[index]);
+	vector<pair<Board, int>> fileBoards = file.loadAll("allRec.txt");
+	gameMode = 遊戲模式;
+	if (game != nullptr) delete game;
+	game = new Game(fileBoards[fileBoards.size() - 1].first, fileBoards[fileBoards.size() - 1].second);
+	game->log.displayFile(fileBoards);
+	showInterface();
+	visibleCursor(true);
+	setCursor(game->getPlayer() == 紅方 ? 紅棋起始位置 : 黑棋起始位置);
 }
 
 void backGameMode()
