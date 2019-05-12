@@ -7,7 +7,7 @@
 #pragma region define
 #define READ_FILE_NAME "game.txt"
 #define WRITE_FILE_NAME "result.txt"
-#define 棋盤基準點X 24
+#define 棋盤基準點X 28
 #define 棋盤基準點Y 2
 #define 棋盤X軸加權 4
 #define 棋盤Y軸加權 2
