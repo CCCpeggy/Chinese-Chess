@@ -30,7 +30,7 @@ void Log::moveDisplay(int piece, Point original, Point change)
 	string status;
 	int tmpMove = move;
 
-	for (int i = 0; i < 1; i++, tmpMove /= 10)
+	for (int i = 0; i < 2; i++, tmpMove /= 10)
 	{
 		status = roadBlack[tmpMove % 10] + status;
 	}
@@ -128,7 +128,10 @@ pair<Board, int> Log::NextBoard()
 
 vector<string> Log::getMove()
 {
-	return vector<string>(displayText.begin(), displayText.begin() + move);
+	if(move > 10)
+		return vector<string>(displayText.begin() + (move - 10), displayText.begin() + move);
+	else
+		return vector<string>(displayText.begin() , displayText.begin() + move);
 }
 
 vector<pair<Board, int> > Log::getRecord()

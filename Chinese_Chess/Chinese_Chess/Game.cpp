@@ -16,7 +16,6 @@ Piece Game::pieces[15] = {
 	, Piece("傌", 1)
 	, Piece("炮", 1)
 	, Piece("兵", 1)
-
 };
 
 Game::Game(Board board,int player):log(board, player),board(board),player()
@@ -115,9 +114,9 @@ void Game::drawBattleSituation(int i)
 {
 	vector<string> logs = log.getMove();
 	if (i < logs.size())
-		cout << logs[i] << "　";
+		cout << logs[i] << "";
 	else
-		cout << "第 " << i << "筆戰績記錄" << "　";
+		cout << "　　　　　　　　";
 }
 
 void Game::drawBanner()
