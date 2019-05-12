@@ -267,7 +267,7 @@ void Game::drawDialog(string output, int index)
 
 void Game::drawOpenTxt(int index) {
 
-
+	
 	//讀取資料夾所有txt
 	char buffer[_MAX_PATH];
 	_getcwd(buffer, _MAX_PATH);
@@ -280,14 +280,13 @@ void Game::drawOpenTxt(int index) {
 	} while (hFile != -1 && _findnext(hFile, &fileName) == 0);
 
 	//計算資料夾有txt的數量
-	int txtcount = filename.size();
 	if (txtcount < 3) {
 		for (int i = 3 - txtcount; i > 0; i--) {
 			filename.push_back("　　　　");
 		}
 	}
 
-
+	
 	drawBanner();
 	for (int i = 0; i < 10; i++) {
 
@@ -296,19 +295,19 @@ void Game::drawOpenTxt(int index) {
 		}
 		else if (i == 4) {
 			drawCheckerboard(i, 2);
-			drawStringFormat(i, filename[(i - 4) * 2], index);
+			index % 3 == 0 ? drawStringFormat(i, filename[(i - 4) * 2], TRUE) : drawStringFormat(i, filename[(i - 4) * 2], FALSE);
 			cout << endl << setw(28) << "　";
 
 			for (int j = 0; j < 12; j++) {
 				cout << piecegrid.gridLine[2 * i + 1][j];
 			}
-			drawStringFormat(i, filename[(i - 4) * 2 + 1], index);
+			index % 3 == 1 ? drawStringFormat(i, filename[(i - 4) * 2 + 1], TRUE) : drawStringFormat(i, filename[(i - 4) * 2 + 1], FALSE);
 
 		}
 		else if (i == 5) {
 			cout << endl;
 			drawCheckerboard(i, 2);
-			drawStringFormat(i, filename[(i - 4) * 2], index);
+			index % 3 == 2 ? drawStringFormat(i, filename[(i - 4) * 2] , TRUE) : drawStringFormat(i, filename[(i - 4) * 2], FALSE);
 			cout << endl << setw(28) << "　";
 			for (int j = 0; j < 12; j++) {
 				cout << piecegrid.gridLine[2 * i + 1][j];
@@ -325,7 +324,7 @@ void Game::drawOpenTxt(int index) {
 
 	}
 	drawFooter();
-
+	
 }
 
 void Game::drawGridFormat(int row, string output) {
@@ -342,20 +341,21 @@ void Game::drawGridFormat(int row, string output) {
 
 }
 
-void Game::drawStringFormat(int row, string output, int index) {
+void Game::drawStringFormat(int row, string output, int hightlight) {
 	SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
 	cout << "║ ";
 	int front = (30 - output.length()) / 2 + 1;
 	SetConsoleTextAttribute(handleSTDOutput, originalColor);
-	if (index != -1) {
-		//若為開舊檔框模式則執行
+	cout << setw(front - 1) << " ";
 
+	if (hightlight == 1) {
+		SetConsoleTextAttribute(handleSTDOutput, BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
 	}
-	cout << setw(front + output.length() - 1) << output;
+	cout << output;
 	SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
 	output.length() % 2 == 0 ? cout << setw(front + 1) << "║ " : cout << setw(front + 2) << "║ ";
 	SetConsoleTextAttribute(handleSTDOutput, originalColor);
-
+	
 }
 
 void Game::setPlayer(int newPlayer)

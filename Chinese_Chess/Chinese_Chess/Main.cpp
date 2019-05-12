@@ -127,8 +127,8 @@ int main() {
 						showDialog(dialogContent, dialogIndex);
 					}
 					else if (gameMode == 選檔模式) {
-						if (input.Event.KeyEvent.wVirtualKeyCode == VK_UP) menuIndex--;
-						if (input.Event.KeyEvent.wVirtualKeyCode == VK_DOWN) menuIndex++;
+						if (input.Event.KeyEvent.wVirtualKeyCode == VK_UP) fileIndex--;
+						if (input.Event.KeyEvent.wVirtualKeyCode == VK_DOWN) fileIndex++;
 						//計算對話框選取項目
 						fileIndex += fileNames.size();
 						if(fileNames.size() > 0) fileIndex = fileIndex % fileNames.size();

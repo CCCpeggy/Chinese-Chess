@@ -27,6 +27,8 @@ public:
 	vector<string>filename;
 	HANDLE handleSTDOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	WORD originalColor = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+	int txtcount = filename.size();
+
 
 	//draw console
 	void drawInterface(); //將Game的資料顯示
