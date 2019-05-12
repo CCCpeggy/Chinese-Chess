@@ -393,8 +393,7 @@ void loadFIle(int index) {
 	vector<pair<Board, int>> fileBoards = file.loadAll("allRec.txt");
 	gameMode = 遊戲模式;
 	if (game != nullptr) delete game;
-	game = new Game(fileBoards[fileBoards.size() - 1].first, fileBoards[fileBoards.size() - 1].second);
-	game->log.displayFile(fileBoards);
+	game = new Game(fileBoards);
 	showInterface();
 	visibleCursor(true);
 	setCursor(game->getPlayer() == 紅方 ? 紅棋起始位置 : 黑棋起始位置);

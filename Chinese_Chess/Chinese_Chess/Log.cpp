@@ -147,7 +147,7 @@ int Log::getMoveNum()
 	return move;
 }
 
-void Log::displayFile(vector<pair<Board, int>>allRec)
+Log::Log(vector<pair<Board, int>>allRec)
 {
 	if (allRec.size() < 1)return;
 	move = 0;

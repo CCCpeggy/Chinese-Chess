@@ -17,6 +17,7 @@ private:
 
 public:
 	Game(Board, int);
+	Game(vector<pair<Board, int>>);
 	Board board;
 	Log log;
 	static Piece pieces[15];
