@@ -12,6 +12,7 @@ public:
 	void writeFile(Board x,int player);
 	void writeAll(vector < pair<Board, int> >rec,int move);
 	vector<pair<Board, int>> loadAll(string filename);
+	vector<string>listFile();
 };
 
 #endif
