@@ -229,35 +229,20 @@ void Game::drawDialog(string output, int index)
 {
 	drawBanner();
 	for (int i = 0; i < 10; i++) {
-
 		if (i == 3) {
-			drawCheckerboard(i, 3);
-			cout << endl << setw(24) << "　";
-			for (int j = 0; j < 12; j++) {
-				cout << piecegrid.gridLine[2 * i + 1][j];
-			}
-			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
-			cout << piecegrid.dialog[0];
-			SetConsoleTextAttribute(handleSTDOutput, originalColor);
-			cout << endl;
+			drawGridFormat(i, output);
 		}
 		else if (i == 4) {
 			drawCheckerboard(i, 2);
-			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
-			cout << "║ ";
-			int front = (30 - output.length()) / 2 + 1;
-			SetConsoleTextAttribute(handleSTDOutput, originalColor);
-			cout << setw(front + output.length() - 1) << output;
-			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
-			cout << setw(front + 1) << "║ ";
-			SetConsoleTextAttribute(handleSTDOutput, originalColor);
+			drawStringFormat(i, output, -1);
+
 			cout << endl << setw(24) << "　";
 			for (int j = 0; j < 12; j++) {
 				cout << piecegrid.gridLine[2 * i + 1][j];
 			}
-			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
-			cout << piecegrid.dialog[(i - 4) + 1] << endl;
-			SetConsoleTextAttribute(handleSTDOutput, originalColor);
+
+
+
 		}
 		else if(i == 5){
 			drawCheckerboard(i, 2);
@@ -274,14 +259,15 @@ void Game::drawDialog(string output, int index)
 			for (j = pos + 2; j < 36; j++) {
 				cout << piecegrid.dialog[(i - 4) + 1][j];
 			}
-			SetConsoleTextAttribute(handleSTDOutput, originalColor);
 			cout << endl << setw(24) << "　";
+			SetConsoleTextAttribute(handleSTDOutput, originalColor);
 			for (int j = 0; j < 12; j++) {
 				cout << piecegrid.gridLine[2 * i + 1][j];
 			}
 			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
-			cout << piecegrid.dialog[(i - 4) + 2] << endl;
+			cout << piecegrid.dialog[i - 2];
 			SetConsoleTextAttribute(handleSTDOutput, originalColor);
+			cout << endl;
 		}
 		else {
 			drawCheckerboard(i, 0);
@@ -289,6 +275,98 @@ void Game::drawDialog(string output, int index)
 	
 	}
 	drawFooter();
+}
+
+void Game::drawOpenTxt(int index) {
+
+
+	//讀取資料夾所有txt
+	char buffer[_MAX_PATH];
+	_getcwd(buffer, _MAX_PATH);
+	char* extenName = "*.txt";
+	unsigned long long hFile;
+	struct _finddata_t fileName;
+	hFile = _findfirst(extenName, &fileName);
+	do {
+		filename.push_back(fileName.name);
+	} while (hFile != -1 && _findnext(hFile, &fileName) == 0);
+
+	//計算資料夾有txt的數量
+	int txtcount = filename.size();
+	if (txtcount < 3) {
+		for (int i = 3 - txtcount; i > 0; i--) {
+			filename.push_back("　　　　");
+		}
+	}
+
+
+	drawBanner();
+	for (int i = 0; i < 10; i++) {
+
+		if (i == 3) {
+			drawGridFormat(i, "");
+		}
+		else if (i == 4) {
+			drawCheckerboard(i, 2);
+			drawStringFormat(i, filename[(i - 4) * 2], index);
+			cout << endl << setw(24) << "　";
+
+			for (int j = 0; j < 12; j++) {
+				cout << piecegrid.gridLine[2 * i + 1][j];
+			}
+			drawStringFormat(i, filename[(i - 4) * 2 + 1], index);
+
+		}
+		else if (i == 5) {
+			cout << endl;
+			drawCheckerboard(i, 2);
+			drawStringFormat(i, filename[(i - 4) * 2], index);
+			cout << endl << setw(24) << "　";
+			for (int j = 0; j < 12; j++) {
+				cout << piecegrid.gridLine[2 * i + 1][j];
+			}
+			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+			cout << piecegrid.dialog[3];
+			SetConsoleTextAttribute(handleSTDOutput, originalColor);
+			cout << endl;
+		}
+		else {
+			drawCheckerboard(i, 0);
+		}
+
+
+	}
+	drawFooter();
+
+}
+void Game::drawGridFormat(int row, string output) {
+
+	drawCheckerboard(row, 3);
+	cout << endl << setw(24) << "　";
+	for (int j = 0; j < 12; j++) {
+		cout << piecegrid.gridLine[2 * row + 1][j];
+	}
+	SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+	cout << piecegrid.dialog[0];
+	SetConsoleTextAttribute(handleSTDOutput, originalColor);
+	cout << endl;
+
+}
+
+void Game::drawStringFormat(int row, string output, int index) {
+	SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+	cout << "║ ";
+	int front = (30 - output.length()) / 2 + 1;
+	SetConsoleTextAttribute(handleSTDOutput, originalColor);
+	if (index != -1) {
+		//若為開舊檔框模式則執行
+
+	}
+	cout << setw(front + output.length() - 1) << output;
+	SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+	output.length() % 2 == 0 ? cout << setw(front + 1) << "║ " : cout << setw(front + 2) << "║ ";
+	SetConsoleTextAttribute(handleSTDOutput, originalColor);
+
 }
 
 void Game::setPlayer(int newPlayer)
