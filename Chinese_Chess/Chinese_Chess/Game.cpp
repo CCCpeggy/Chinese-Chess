@@ -214,7 +214,7 @@ void Game::drawDialog(string output, int index)
 	drawBanner();
 	for (int i = 0; i < 10; i++) {
 		if (i == 3) {
-			drawGridFormat(i, output);
+			drawUpperDialog(i);
 		}
 		else if (i == 4) {
 			drawCheckerboard(i, 2);
@@ -246,16 +246,8 @@ void Game::drawDialog(string output, int index)
 			for (j = pos + 2; j < 36; j++) {
 				cout << piecegrid.dialog[(i - 4) + 1][j];
 			}
+			drawdownerDialog(i);
 
-			cout << endl << setw(28) << "　";
-			SetConsoleTextAttribute(handleSTDOutput, originalColor);
-			for (int j = 0; j < 12; j++) {
-				cout << piecegrid.gridLine[2 * i + 1][j];
-			}
-			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
-			cout << piecegrid.dialog[i - 2];
-			SetConsoleTextAttribute(handleSTDOutput, originalColor);
-			cout << endl;
 		}
 		else {
 			drawCheckerboard(i, 0);
@@ -269,8 +261,7 @@ void Game::drawOpenTxt(int index, vector<string> filename) {
 
 	int filecount = filename.size();
 	int filecountremainder = filecount % 3;
-	int count = (index + 1 )/ filecount ;
-
+	int count = (index + 1) / 4;
 
 	if (filecountremainder != 0) {
 		for (int i = 0; i < 3 - filecountremainder; i++) {
@@ -282,31 +273,25 @@ void Game::drawOpenTxt(int index, vector<string> filename) {
 	for (int i = 0; i < 10; i++) {
 
 		if (i == 3) {
-			drawGridFormat(i, "");
+			drawUpperDialog(i);
 		}
 		else if (i == 4) {
 			drawCheckerboard(i, 2);
 			index % 3 == 0 ? drawStringFormat(i, filename[((i - 4) * 2) + (count * 3)], TRUE) : drawStringFormat(i, filename[((i - 4) * 2) + (count * 3)], FALSE);
+			
 			cout << endl << setw(28) << "　";
-
 			for (int j = 0; j < 12; j++) {
 				cout << piecegrid.gridLine[2 * i + 1][j];
 			}
+
 			index % 3 == 1 ? drawStringFormat(i, filename[((i - 4) * 2 + 1 )+ (count * 3)], TRUE) : drawStringFormat(i, filename[((i - 4) * 2 + 1) + (count * 3)], FALSE);
+			cout << endl;
 
 		}
 		else if (i == 5) {
-			cout << endl;
 			drawCheckerboard(i, 2);
 			index % 3 == 2 ? drawStringFormat(i, filename[((i - 4) * 2 )+ (count * 3)] , TRUE) : drawStringFormat(i, filename[((i - 4) * 2) + (count * 3)], FALSE);
-			cout << endl << setw(28) << "　";
-			for (int j = 0; j < 12; j++) {
-				cout << piecegrid.gridLine[2 * i + 1][j];
-			}
-			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
-			cout << piecegrid.dialog[3];
-			SetConsoleTextAttribute(handleSTDOutput, originalColor);
-			cout << endl;
+			drawdownerDialog(i);
 		}
 		else {
 			drawCheckerboard(i, 0);
@@ -318,7 +303,7 @@ void Game::drawOpenTxt(int index, vector<string> filename) {
 	
 }
 
-void Game::drawGridFormat(int row, string output) {
+void Game::drawUpperDialog(int row) {
 
 	drawCheckerboard(row, 3);
 	cout << endl << setw(28) << "　";
@@ -347,6 +332,18 @@ void Game::drawStringFormat(int row, string output, int hightlight) {
 	output.length() % 2 == 0 ? cout << setw(front + 1) << "║ " : cout << setw(front + 2) << "║ ";
 	SetConsoleTextAttribute(handleSTDOutput, originalColor);
 	
+}
+
+void Game::drawdownerDialog(int row) {
+	cout << endl << setw(28) << "　";
+	SetConsoleTextAttribute(handleSTDOutput, originalColor);
+	for (int j = 0; j < 12; j++) {
+		cout << piecegrid.gridLine[2 * row + 1][j];
+	}
+	SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
+	cout << piecegrid.dialog[row - 2];
+	SetConsoleTextAttribute(handleSTDOutput, originalColor);
+	cout << endl;
 }
 
 void Game::setPlayer(int newPlayer)

@@ -36,7 +36,8 @@ public:
 	void drawBattleSituation(int); //戰況顯示 取log
 	void drawMenu(int); //0 1 2 3
 	void drawDialog(string, int);  //Button是否, 1是 0否
-	void drawGridFormat(int, string);
+	void drawUpperDialog(int);
+	void drawdownerDialog(int);
 	void drawStringFormat(int, string, int);
 	void drawOpenTxt(int, vector<string>);
 
