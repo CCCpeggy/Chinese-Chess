@@ -1,6 +1,7 @@
 #include "File.h"
 #include<fstream>
 #include "Log.h"
+#include<Windows.h>
 pair<Board,int> File::loadFile(string filename)
 {
 	ifstream boardinfo;
@@ -101,4 +102,44 @@ vector<pair<Board, int>> File::loadAll(string filename)
 		boardRec >> player;
 		allRec.push_back(pair<Board, int>(a, player));
 	}
+}
+bool isTxt(string a)
+{
+	int i = 0;
+	for (; i < a.length(); i++)
+	{
+		if (a[i] == '.')
+		{
+			break;
+		}
+	}
+	if (a.length() - i >= 3 && a[i + 1] == 't'&&a[i + 2] == 'x'&&a[i + 3] == 't')
+	{
+		return true;
+	}
+	else { return false; }
+}
+vector<string>File::listFile()
+{
+		vector<string>fileName;
+		string szDir = ".//\*";
+		string dir;
+		WIN32_FIND_DATA FileData;
+		HANDLE hList;
+		hList = FindFirstFile(szDir.c_str(), &FileData);
+		while (1)
+		{
+			if (!FindNextFile(hList, &FileData))
+			{
+				if (GetLastError() == ERROR_NO_MORE_FILES)
+				break;
+			}
+			string a(FileData.cFileName);
+			if (isTxt(a))
+			{
+				fileName.push_back(a);
+			}
+		}
+		FindClose(hList);
+		return fileName;
 }
