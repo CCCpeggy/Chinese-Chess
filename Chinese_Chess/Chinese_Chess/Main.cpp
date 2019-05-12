@@ -215,7 +215,7 @@ int main() {
 							}
 						}
 						//亂數移動位置
-						else if ((!gameOver) && input.Event.KeyEvent.uChar.AsciiChar == 'R') {
+						else if (gameMode == 遊戲模式 && (!gameOver) && input.Event.KeyEvent.uChar.AsciiChar == 'R') {
 							pair<Point, Point> randomMovePoint = game->board.randMove(game->getPlayer());
 							selectedPoint = randomMovePoint.first;
 							gamePoint = randomMovePoint.second;
