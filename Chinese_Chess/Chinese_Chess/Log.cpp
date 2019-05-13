@@ -30,7 +30,7 @@ void Log::moveDisplay(int piece, Point original, Point change)
 	string status;
 	int tmpMove = move;
 
-	for (int i = 0; i < 2; i++, tmpMove /= 10)
+	for (int i = 0; i < 3; i++, tmpMove /= 10)
 	{
 		status = roadBlack[tmpMove % 10] + status;
 	}

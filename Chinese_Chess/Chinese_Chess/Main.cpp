@@ -386,7 +386,7 @@ void showFile(int index)
 {
 	visibleCursor(false);
 	setInputCursor();
-	game->drawOpenTxt(index,fileNames);
+	game->drawOpenTxt(index, fileNames);
 }
 
 void loadFIle(int index) {

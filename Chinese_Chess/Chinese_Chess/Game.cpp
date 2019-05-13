@@ -270,7 +270,7 @@ void Game::drawOpenTxt(int index, vector<string> filename) {
 
 	int filecount = filename.size();
 	int filecountremainder = filecount % 3;
-	int count = (index + 1) / 4;
+	int count = index / 3;
 
 	if (filecountremainder != 0) {
 		for (int i = 0; i < 3 - filecountremainder; i++) {
