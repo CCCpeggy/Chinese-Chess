@@ -68,9 +68,6 @@ void Game::drawCheckerboard(int i, int mode) {//mode:0->一般, 1->目錄, 2, 3-
 	cout << "｜　";
 	for (int j = 0; j <= range; j++) {
 
-		if (board[i][j] == -1 || board[i][j] == -8) {
-			Checkmate = true;
-		}
 		if (board[i][j] > 0) {
 			if (board[i][j] == 15) {
 				cout << piecegrid.gridLine[i * 2][j * 2 * 2] << piecegrid.gridLine[i * 2][j * 2 * 2 + 1];
@@ -112,10 +109,7 @@ void Game::drawCheckerboard(int i, int mode) {//mode:0->一般, 1->目錄, 2, 3-
 		}
 		cout << endl << setw(92) << piecegrid.gridLine[2 * i + 1] << endl;
 	}
-	else if (i == 9) {
-		drawcheckmate(Checkmate);
-		Checkmate = false;
-	}
+
 
 }
 
@@ -162,24 +156,6 @@ void Game::drawStatus()
 	}
 }
 
-void Game::drawcheckmate(bool Checkmate) {
-	if (Checkmate) {
-		cout << setw(10) << " ";
-		if (player == 1) {
-			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
-			cout << "紅方將軍";
-		}
-		else {
-			SetConsoleTextAttribute(handleSTDOutput, BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
-			cout << "黑方將軍";
-		}
-		SetConsoleTextAttribute(handleSTDOutput, originalColor);
-	}
-	else {
-		cout << setw(20) << " ";
-	}
-	
-}
 
 void Game::drawMenu(int index)
 {

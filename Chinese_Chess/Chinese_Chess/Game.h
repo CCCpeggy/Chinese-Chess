@@ -41,7 +41,6 @@ public:
 	void drawdownerDialog(int);
 	void drawStringFormat(int, string, int);
 	void drawOpenTxt(int, vector<string>);
-	void drawcheckmate(bool);
 
 	//player
 	void setPlayer(int);
