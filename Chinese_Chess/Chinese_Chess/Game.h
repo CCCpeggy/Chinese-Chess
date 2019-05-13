@@ -26,6 +26,7 @@ public:
 	Piece piecegrid;
 	HANDLE handleSTDOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	WORD originalColor = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+	bool Checkmate = false;
 
 	//draw console
 	void drawInterface(); //將Game的資料顯示
@@ -40,6 +41,7 @@ public:
 	void drawdownerDialog(int);
 	void drawStringFormat(int, string, int);
 	void drawOpenTxt(int, vector<string>);
+	void drawcheckmate(bool);
 
 	//player
 	void setPlayer(int);

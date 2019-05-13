@@ -87,6 +87,13 @@ int main() {
 	GetConsoleMode(handleInput, &consoleMode);
 	SetConsoleMode(handleInput, consoleMode & ~ENABLE_LINE_INPUT);
 
+	//更改視窗大小
+	HWND console = GetConsoleWindow();
+	RECT ConsoleRect;
+	GetWindowRect(console, &ConsoleRect);
+	//控制數字部分以調整視窗尺寸
+	MoveWindow(console, ConsoleRect.left, ConsoleRect.top, 800, 450, TRUE);
+
 #pragma endregion
 
 	initBoard();
