@@ -92,7 +92,7 @@ int main() {
 	RECT ConsoleRect;
 	GetWindowRect(console, &ConsoleRect);
 	//控制數字部分以調整視窗尺寸
-	MoveWindow(console, ConsoleRect.left, ConsoleRect.top, 800, 450, TRUE);
+	MoveWindow(console, ConsoleRect.left, ConsoleRect.top, 800, 420, TRUE);
 
 #pragma endregion
 

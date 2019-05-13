@@ -101,13 +101,13 @@ void Game::drawCheckerboard(int i, int mode) {//mode:0->一般, 1->目錄, 2, 3-
 		drawStatus();
 	}
 	else if (i == 7) {
-		cout << setw(26) << "←　→　方向鍵控制光標";
+		cout << setw(28) << "←　→　方向鍵控制光標";
 	}
 	if (mode == 0 && i != 9) {
 		if (i == 4 || i == 5) {
 			cout << "　　　　　　　　　　　　";
 		}
-		cout << endl << setw(92) << piecegrid.gridLine[2 * i + 1] << endl;
+		cout << endl << setw(94) << piecegrid.gridLine[2 * i + 1] << endl;
 	}
 
 
@@ -126,36 +126,41 @@ void Game::drawBanner()
 {
 	cout << "．———　戰況表　———．";
 	SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED | FOREGROUND_BLUE);
-	cout << setw(36) << piecegrid.gridLabel[0] << endl << endl;
+	cout << setw(38) << piecegrid.gridLabel[0];
 	SetConsoleTextAttribute(handleSTDOutput, originalColor);
+	cout << "．————　說明欄　————．";
+	cout << endl << setw(94) << "｜　　　　　　　　　　　　　｜" << endl;
 }
 
 void Game::drawFooter()
 {
-	cout << endl << endl << "．———————————．";
+	
+	cout << endl ;
+	cout << setw(94) << "｜　　　　　　　　　　　　　｜" << endl;
+	cout << "．———————————．";
 	SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED | FOREGROUND_BLUE);
-	cout << setw(36) << piecegrid.gridLabel[1] << endl;
+	cout << setw(38) << piecegrid.gridLabel[1];
 	SetConsoleTextAttribute(handleSTDOutput, originalColor);
+	cout << "．—————————————．";
 }
 
 void Game::drawStatus()
 {
 	if (player == 1) {
-		cout << setw(18) << "現在輪到";
+		cout << setw(20) << "現在輪到";
 		SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_RED);
 		cout << "紅方";
 		SetConsoleTextAttribute(handleSTDOutput, originalColor);
 		cout << "下棋";
 	}
 	else if (player == 0) {
-		cout << setw(18) << "現在輪到";
+		cout << setw(20) << "現在輪到";
 		SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_INTENSITY);
 		cout << "黑方";
 		SetConsoleTextAttribute(handleSTDOutput, originalColor);
 		cout << "下棋";
 	}
 }
-
 
 void Game::drawMenu(int index)
 {
