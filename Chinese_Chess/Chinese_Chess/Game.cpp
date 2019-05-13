@@ -76,7 +76,7 @@ void Game::drawCheckerboard(int i, int mode) {//mode:0->一般, 1->目錄, 2, 3-
 			}
 		}
 		else if (board[i][j] < 0) {
-			SetConsoleTextAttribute(handleSTDOutput,  BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
+			SetConsoleTextAttribute(handleSTDOutput, FOREGROUND_BLUE | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
 			if (board[i][j] == -15) {
 				cout << piecegrid.gridLine[i * 2][j * 2 * 2] << piecegrid.gridLine[i * 2][j * 2 * 2 + 1];
 			}
