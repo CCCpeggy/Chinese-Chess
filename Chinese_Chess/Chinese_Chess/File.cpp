@@ -119,7 +119,30 @@ bool isTxt(string a)
 	}
 	else { return false; }
 }
-
+bool isBoard(string filename)
+{
+	ifstream boardRec;
+	boardRec.open(filename);
+	short temp;
+	int player;
+	vector<short>hold;
+	while (true)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				if (!(boardRec >> temp))
+				{
+					if (hold.size() % 91 == 0&&hold.size()>0) {return true;}
+					else return false;
+				}
+				if (abs(temp) >= 15) { return false; }
+				hold.push_back(temp);
+			}
+		}
+	}
+}
 vector<string>File::listFile()
 {
 		vector<string>fileName;
@@ -136,7 +159,7 @@ vector<string>File::listFile()
 				break;
 			}
 			string a(FileData.cFileName);
-			if (isTxt(a))
+			if (isTxt(a)&&isBoard(a))
 			{
 				fileName.push_back(a);
 			}
