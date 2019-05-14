@@ -18,7 +18,7 @@ Piece Game::pieces[15] = {
 	, Piece("兵", 1)
 };
 
-Game::Game(Board board,int player):log(board, player),board(board),player()
+Game::Game(Board board,int player):log(board, player),board(board),player(player)
 {	
 }
 
