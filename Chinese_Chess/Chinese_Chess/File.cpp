@@ -12,12 +12,12 @@ pair<Board,int> File::loadFile(string filename)
 	{
 		for (int j = 0; j < 9; j++)
 		{
-			boardinfo >> temp;
+			if (!(boardinfo >> temp)) { temp = 15; }
 			if (temp == 0) { temp = 15; }
 			board[Point(i,j)] = temp;
 		}
 	}
-	boardinfo >> temp;
+	if (!(boardinfo >> temp)) { temp = 1; }
 	int player;
 	player = temp;
 	boardinfo.close();
