@@ -137,7 +137,7 @@ bool isBoard(string filename)
 					if (hold.size() % 91 == 0&&hold.size()>0) {return true;}
 					else return false;
 				}
-				if (abs(temp) >= 15) { return false; }
+				if (temp<0||temp>15) { return false; }
 				hold.push_back(temp);
 			}
 		}
